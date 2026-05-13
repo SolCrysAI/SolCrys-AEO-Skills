@@ -114,26 +114,18 @@ Verify with `claude mcp list` — `solcrys` should show as registered.
 
 ### Claude Desktop
 
-Claude Desktop bridges through the `mcp-remote` proxy (`npx` fetches it):
+Claude Desktop now has a native **Add custom connector** UI for MCP — no config file editing needed.
 
-```json
-{
-  "mcpServers": {
-    "solcrys": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "mcp-remote",
-        "https://mcp.solcrys.com/mcp",
-        "--header",
-        "Authorization: Bearer <PASTE TOKEN HERE>"
-      ]
-    }
-  }
-}
-```
+1. Open Claude Desktop → click **Connectors** in the sidebar (or the connectors icon in the chat composer).
+2. Click the **+** icon at the top of the Connectors panel → **Add custom connector**.
+3. Fill in the dialog:
+   - **Name:** `SolCrys AEO` (or any label)
+   - **Remote MCP server URL:** `https://mcp.solcrys.com/mcp`
+4. Click **Add**. Your browser opens to the SolCrys consent screen — sign in, pick a tenant, click Authorize.
 
-Config file path (macOS): `~/Library/Application Support/Claude/claude_desktop_config.json`. Restart Claude Desktop after editing.
+The connector card flips to **Connected**. In a chat, ask *"Use SolCrys to list my workspaces"* to verify.
+
+> **PAT path:** if you can't use OAuth (e.g., older Claude Desktop, or you want to bind a long-lived token), you can still bridge via the `mcp-remote` proxy. Edit `~/Library/Application Support/Claude/claude_desktop_config.json` and add an `mcpServers.solcrys` entry pointing `command: "npx"` at `mcp-remote` with `--header "Authorization: Bearer <YOUR_TOKEN>"`. Use the native connector UI above whenever possible — it's the supported path.
 
 ### Cursor
 
