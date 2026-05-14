@@ -1,6 +1,6 @@
 ---
 name: solcrys-action-driven-content
-description: Pull the workspace's open action queue from SolCrys, pick one task (or the one the user names), research it against the underlying data and deep-analysis reasoning, web-search for the brand's verifiable facts and competitor content, and draft the actual web content the task recommends — blog post, landing page section, FAQ entry, or comparison piece. The deliverable is a publication-ready first draft grounded in real brand data and the AEO data — or an honest outline + fact checklist when the fact-grounding surface is incomplete. Use this skill whenever the user asks to "draft content from my action queue", "pick an action and write the content", "execute one of my AEO tasks", "write the blog post for task X", "draft the page based on the recommendation", or any framing of *take a recommended action and produce the actual deliverable*. Trigger even if the user just says "pick something from my SolCrys tasks and write it" or "draft me content based on what SolCrys recommends".
+description: Pull the workspace's open recommendation pool from SolCrys — by default the promoted Action Hub queue, widening to un-promoted deep-analysis recommendations when the user asks for "all recommendations" / "include un-promoted" / "everything in the workspace" or when the promoted queue is empty — pick one task (or the one the user names), research it against the underlying data and deep-analysis reasoning, web-search for the brand's verifiable facts and competitor content, and draft the actual web content the task recommends — blog post, landing page section, FAQ entry, or comparison piece. The deliverable is a publication-ready first draft grounded in real brand data and the AEO data — or an honest outline + fact checklist when the fact-grounding surface is incomplete. Use this skill whenever the user asks to "draft content from my action queue", "pick an action and write the content", "execute one of my AEO tasks", "write the blog post for task X", "draft the page based on the recommendation", or any framing of *take a recommended action and produce the actual deliverable*. Trigger even if the user just says "pick something from my SolCrys tasks and write it", "draft me content based on what SolCrys recommends", or "include un-promoted deep-analysis recommendations".
 ---
 
 # SolCrys Action-Driven Content Creator
@@ -25,27 +25,47 @@ The user wants the AI to act on one of SolCrys' recommended actions — not just
 
 Standard discovery flow (use the slug if supplied; otherwise call `solcrys_list_workspaces`). If multiple workspaces could match a fuzzy brand name supplied by the user, **ask** rather than guess.
 
-### 2. Pull the action queue
+### 2. Build the candidate list
 
-Call `solcrys_get_tasks` with `status: "todo"`, `limit: 25`. Filter further if the user specified.
+The candidate pool defaults to **promoted tasks only** (the Action Hub — what `solcrys_get_tasks` returns). It widens to include **un-promoted deep-analysis recommendations** when ANY of the following hold:
 
-If the queue is empty, tell the user — don't fabricate a task.
+- The user asked for "all recommendations" / "include un-promoted" / "everything in the workspace" / any framing of *don't limit to the Action Hub*.
+- The promoted queue (2A) is empty.
+- The user named a specific recommendation that doesn't appear in the promoted queue.
+
+**2A. Promoted tasks (Action Hub).** Call `solcrys_get_tasks` with `status: "todo"`, `limit: 25`. Apply `priority` / `category` filters if the user specified them. Tag each row `[PROMOTED]` in your internal candidate list (the row's `id` is its identifier).
+
+**2B. Un-promoted deep-analysis recommendations (skip if 2A already satisfied the user's ask).** Call `solcrys_get_deep_analysis` with `status: "completed"`, `limit: 30`, and the same `timeRange` as 2A. For each returned analysis row:
+
+- Parse `result.actions[]` from the row's `result` JSONB. Each element typically carries `title`, `rationale`, `content_type` ("create" | "fix"), `impact`, `gap_types`, `primary_engines`, `evidence_response_ids`, `evidence_citation_ids`, `related_prompt_ids`.
+- **Dedup against 2A:** drop any candidate where some `[PROMOTED]` task `T` has `T.source_type == "deep_analysis"` AND `T.source_id == analysis.response_id` AND `T.source_metadata.action_item_index == index`. The promoted version is canonical — use that instead.
+- Tag survivors `[UNPROMOTED-DEEP-ANALYSIS]` with synthetic id `da:<response_id_short8>:<index>` (e.g. `da:a3f02bd1:2`).
+
+**Coverage caveat — surface to the user the first time 2B fires:** the MCP does not currently expose `prompt_deep_analysis_reports` (the newer per-prompt synthesis reports). Recommendations that live only there will not appear in 2B. If the user expects a specific recommendation that is missing, they may need to promote it from the dashboard, or wait for a future MCP tool that surfaces that table. State this once, then proceed.
+
+If the combined candidate list is empty, tell the user — don't fabricate a task.
 
 ### 3. Pick the task
 
-Three picking modes:
+Four picking modes:
 
-- **User-specified:** the user named a task by id, title fragment, or theme. If more than one open task matches the user's wording, ask before drafting.
-- **Highest-impact pick:** sort by `priority` (high → low), then `due_date` ascending. Take the first content-producing task (action_type implies writing — "publish_post", "refresh_page", "add_faq_entry"). Skip non-content tasks (schema-markup-only, technical SEO fixes).
+- **User-specified:** the user named a task by id (`<uuid>` for promoted, `da:<id8>:<idx>` for un-promoted), title fragment, or theme. If more than one candidate matches, ask before drafting.
+- **Highest-impact pick (promoted only):** sort `[PROMOTED]` candidates by `priority` (high → low), then `due_date` ascending. Take the first content-producing task (action_type implies writing — `content_create`, `content_fix` whose title implies prose work — "publish_post", "refresh_page", "add_faq_entry"). Skip non-content tasks (schema-markup-only, robots.txt, technical SEO fixes).
+- **Highest-impact pick across promoted + un-promoted** (only when 2B fired): rank `[PROMOTED]` first within the same priority tier; within `[UNPROMOTED-DEEP-ANALYSIS]` rank by `impact` (high → low — strings often come as "high"/"medium"/"low"). Same content-only filter.
 - **User offered a category:** filter by category first, then highest-impact within it.
 
-Confirm the pick in one short sentence — *"Picking task #[id]: '[title]' (priority: [high], category: [...]). Beginning research now."* — then continue.
+**When picking an `[UNPROMOTED-DEEP-ANALYSIS]` candidate, warn explicitly in the confirmation sentence:** *"Picking un-promoted recommendation `da:[id8]:[idx]` from deep-analysis report on prompt '[truncated prompt text]'. ⚠ No Action Hub record will track this work — recommend promoting from the dashboard before publishing if you want lifecycle tracking (status, assignment, publish_verified). Proceeding to research."*
+
+For a promoted pick, the existing form: *"Picking task #[id]: '[title]' (priority: [high], category: [...]). Beginning research now."*
 
 ### 4. Research the task (data layer)
 
 Gather the SolCrys-side context:
 
-**A. The reasoning behind the task.** If the task's `source_type` is `deep_analysis_result`, call `solcrys_get_deep_analysis` and find the matching record. Its result blob contains the structured analysis and recommendations that generated this task — this tells you *why* this task exists.
+**A. The reasoning behind the task.** Branch by candidate origin:
+- **`[PROMOTED]` with `source_type == "deep_analysis"`:** call `solcrys_get_deep_analysis` and find the record where `response_id == task.source_id`. Index into `result.actions[task.source_metadata.action_item_index]` for the originating recommendation; use the surrounding `result` (analysis-level fields like `brand_status`, `position`) and the picked `actions[i]` (`rationale`, `engine_reasoning`, `gap_types`, `primary_engines`, `evidence_response_ids`) for *why*.
+- **`[PROMOTED]` with `source_type == "audit"` / `"manual"` / `"agent"` / `"system"`:** rely on the task's own `description` and `source_metadata` — there's no deep-analysis blob to fetch.
+- **`[UNPROMOTED-DEEP-ANALYSIS]`:** you already have the recommendation in hand from step 2B. Reuse the same analysis record (don't re-fetch). Treat its `result.actions[index]` as the recommendation, and the surrounding `result` as the *why*.
 
 **B. The prompt-level context.** Call `solcrys_get_prompts_insights` and find the prompt(s) the task references. Note: presence_pct, citation_pct, sentiment, top competitors, and the engines where presence is lowest.
 
@@ -105,6 +125,7 @@ When step 5's decision gate flips this way, produce:
 **Status:** Outline mode — too many facts unverified to safely produce publication-ready copy.
 
 **Source task:** #[id] — [title]
+**Candidate origin:** [PROMOTED #<action-uuid> | UNPROMOTED-DEEP-ANALYSIS da:<id8>:<index>]
 **Target prompts:** [list with current presence %]
 **Competitor citations being displaced:** [list URLs + whether each was fetched or only known by title]
 
@@ -131,7 +152,8 @@ This is a successful outcome, not a failed one. Better an honest outline than fa
 # Draft: [Working title]
 
 **Source task:** #[id] — [title]
-**Recommendation source:** [deep_analysis_result / prompt insight / etc.]
+**Candidate origin:** [PROMOTED #<action-uuid> | UNPROMOTED-DEEP-ANALYSIS da:<id8>:<index>]
+**Recommendation source:** [deep_analysis_result / audit / manual / agent / system]
 **Target prompts:** [list 1-3 prompts this draft targets, with current presence %]
 **Competitor citations being displaced:** [list 2-3 URLs from step 4C, marked as "fetched" or "title-only"]
 **Fact-grounding sources used:** [user docs / fetched URLs / web search domains]
@@ -150,6 +172,7 @@ This is a successful outcome, not a failed one. Better an honest outline than fa
 - **Suggested internal links:** [2-3 owned URLs that were fetched in step 5B, with the actual link target — not invented]
 - **Brand voice source:** [either "matched from fetched content at <url>" OR "insufficient data — wrote in neutral professional tone"]
 - **Schema / metadata recommendation:** [only if page type and required properties are verified; never invent ratings/reviews/prices]
+- **Lifecycle status:** [if Candidate origin is `[PROMOTED]`: "Tracked in Action Hub as #<uuid> — update its status to `in_progress` or `in_review` after handing off." | if `[UNPROMOTED-DEEP-ANALYSIS]`: "⚠ Not tracked in Action Hub. To enable status/assignment/publish_verified tracking, promote `da:<id8>:<index>` from the dashboard's deep-analysis view before publishing this draft."]
 
 ---
 
@@ -165,6 +188,7 @@ This is a successful outcome, not a failed one. Better an honest outline than fa
 - Brand voice either matches fetched owned content OR is explicitly flagged as neutral with the source-insufficient note.
 - The "Why this should move the needle" section names a specific prompt and current presence %, not a vague "improve AEO".
 - When in doubt, the outline-mode fallback fires instead of producing invented prose.
+- The candidate's origin (`[PROMOTED]` vs `[UNPROMOTED-DEEP-ANALYSIS]`) is surfaced in both the pick confirmation and the deliverable metadata. When un-promoted, the lifecycle warning is shown to the user once.
 
 ## What to avoid
 
@@ -173,6 +197,8 @@ This is a successful outcome, not a failed one. Better an honest outline than fa
 - **Don't draft generic SEO content** ("Welcome to our comprehensive guide…"). AEO rewards directness. First 50 words must answer the prompt.
 - **Don't characterize competitor content you didn't fetch.** Referring to "Wirecutter's exhaustive comparison" when you only have a URL/title is fabrication.
 - **Don't write to a target word count** when you don't have enough facts to fill it. Outline mode > padding mode.
+- **Don't silently widen to un-promoted recommendations.** The widening triggers in step 2 are explicit; if none of them hold, stop at the promoted queue. When you do widen, say so once.
+- **Don't auto-promote.** This skill does not call the dashboard's `/actions/promote` endpoint (no MCP write tools exist for that anyway). If the user wants an un-promoted recommendation tracked in the Action Hub, point them at the dashboard's deep-analysis view — never claim the skill promoted it.
 
 ## Forbidden phrasings in drafted content
 
