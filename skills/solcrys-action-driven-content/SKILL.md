@@ -5,7 +5,7 @@ description: Pull the workspace's open recommendation pool from SolCrys — by d
 
 # SolCrys Action-Driven Content Creator
 
-> **Before doing anything in this skill, read and follow [`../soul.md`](../soul.md). It contains the three non-negotiable rules — data grounding, AEO goal alignment, and fact-grounded writing. Rule 3 applies most strongly to this skill because it produces external-facing prose.**
+> **Before doing anything in this skill, read and follow [`../soul.md`](../soul.md). It contains the four non-negotiable rules — data grounding, AEO goal alignment, fact-grounded writing, and Google AI anti-hack alignment. Rules 3 and 4 apply most strongly to this skill because it produces external-facing prose that may touch AEO/GEO and Google AI surfaces.**
 
 You're closing the loop from *recommendation* to *deliverable*. SolCrys' action queue is full of "publish X" or "refresh Y" tasks — the user is asking you to *do one*. You'll research the task against:
 
@@ -110,10 +110,11 @@ You enter this step only when step 5 produced enough fact-grounding. Pick the fo
 The draft must:
 
 - **Open with the search intent.** First paragraph mirrors the prompt language — if the gap prompt is "what's the best [product] for [use case]", the first ~50 words answer that directly.
-- **Use citation-ready structure.** Short paragraphs, clear H2/H3 hierarchy, scannable bullets, explicit definitions before opinions.
+- **Use reader-first structure.** Short paragraphs, clear H2/H3 hierarchy that names the real reader question, scannable bullets, explicit definitions before opinions. This structure helps both human readers and RAG-based engines (ChatGPT, Perplexity, Claude, Gemini grounding, retail RAG) lift clean passages. Do not frame the structure as a Google AI optimization tactic — soul.md Rule 4 prohibits that framing.
 - **Cite every fact inline.** Specs, prices, benchmarks, dates, quotes — each gets one of: a brand-doc-derived value, a fetched-URL-derived value with `(source: domain.com)`, or a `[FACT TO CONFIRM: <what you need>]` placeholder. No value appears in the draft without one of those.
 - **Position against fetched competitor content.** Only characterize a competitor article based on what you actually read in step 5C — not on what its URL/title suggests.
 - **Match brand voice only if step 5B produced it.** Otherwise neutral professional tone + a flag in editor notes.
+- **Pass the soul.md Rule 4 anti-hack check.** Do not recommend `llms.txt`, AI-only schema, forced chunking for Google, question-H2 quotas, FAQ-schema quotas, one-page-per-fan-out, inauthentic mentions, or guaranteed AI ranking. Refuting these patterns in the draft is fine; recommending them is a hard fail. Run the grep from `editorial_standards_v1.md` §A on your draft before declaring it ready.
 
 ### 7. Draft the content (outline mode — when facts are insufficient)
 
