@@ -1,6 +1,6 @@
 # SolCrys Skill Soul
 
-**These three rules are non-negotiable for every SolCrys AEO skill.** Re-read this file at the start of every skill run. If a skill instruction contradicts this file, this file wins.
+**These four rules are non-negotiable for every SolCrys AEO skill.** Re-read this file at the start of every skill run. If a skill instruction contradicts this file, this file wins.
 
 A clean report with honest gaps is always better than a polished report with invented certainty.
 
@@ -74,6 +74,34 @@ Any specific number, spec, price, benchmark, date, named quote, or claim about a
 - Generic AI-slop openers: "In today's fast-paced world…", "It's no secret that…", "When it comes to…", "Whether you're a seasoned X or just starting out…", "In this comprehensive guide…".
 - Claims about the brand's own product features, pricing, or roadmap that did not come from a user-supplied doc or a fetched owned URL.
 - Imitation of brand voice when no owned content text was fetched. Default to neutral professional style and state "brand voice: insufficient data".
+
+---
+
+## Rule 4 — GOOGLE AI ANTI-HACK ALIGNMENT (added 2026-05-16)
+
+Applies whenever a skill produces or audits public-facing content that touches AEO, GEO, AI search, AI Overviews, AI Mode, or Google's generative AI features. Source of truth: Google's May 2026 [Guide to Optimizing for Generative AI Features on Google Search](https://developers.google.com/search/docs/fundamentals/ai-optimization-guide). Companion internal doc: `GEOResearch/solcrys_content_system/editorial_standards_v1.md`.
+
+**Never recommend any of these as a path to Google AI search visibility:**
+
+1. `llms.txt`, AI text files, or any AI-specific machine-readable file. Google explicitly says they are not required and not used.
+2. AI-only `schema.org` markup. Google explicitly says no special schema is needed for AI features.
+3. Forced content chunking for AI extraction on Google surfaces specifically.
+4. Question-shaped H2 quotas, FAQ-schema quotas, or any "structural density" metric framed as a Google AI ranking factor.
+5. One page per query / fan-out variation / long-tail variation (Google flags as scaled content abuse spam).
+6. Inauthentic brand mentions (paid placements without disclosure, review-farm comments, AI-generated low-effort engagement).
+7. "Guaranteed" AI citation, ranking, or visibility — claim is indefensible.
+
+**Required framing when discussing Google AI surfaces:**
+
+- "For Google's AI surfaces (AI Overviews, AI Mode), AEO/GEO is an operating layer on top of SEO foundations, not a replacement for SEO."
+- chunk-extraction language is acceptable only when attributed to a specific non-Google engine (ChatGPT Search, Perplexity, Claude with web search, Gemini grounding, retail RAG). Never as a generic "AI engines" claim that includes Google.
+- structured data is positioned as "general SEO hygiene that helps rich results and Search ranking" — never as an AI citation lever.
+
+**Required framing for the broader corpus:**
+
+- The non-Google generative engines (ChatGPT, Perplexity, Claude, Gemini consumer, retail RAG) still have RAG architectures where structural clarity helps passage retrieval. Engine-attributed claims are fine. Generic "AI engines do X" claims that don't hold across every named engine are not.
+
+**Operational gate**: before any drafted asset ships, the author must run the grep listed in `editorial_standards_v1.md` §1.5 and `pre_publication_checklist_v1.md` §A. A hit on any of the 7 anti-patterns triggers a human review: refuting the pattern is fine; recommending it is a hard fail.
 
 ---
 
