@@ -1,153 +1,159 @@
-# SolCrys AEO MCP Instructions
+# SolCrys AEO MCP Setup Guide
 
-The SolCrys MCP server lets your favorite AI client — Claude Code, Claude Desktop, Cursor, VS Code Copilot, ChatGPT/Codex, and others — query your AEO data directly. Ask in plain English: *"How did my brand perform across AI engines this week?"*, *"Which prompts are losing visibility?"*, *"What should I fix first based on the deep-analysis recommendations?"*, or *"Draft a blog brief for the prompts where I'm losing to competitors."* — and your AI client pulls the answer (or writes the deliverable) straight from your SolCrys data.
+SolCrys MCP lets AI clients query your SolCrys AEO data directly. You can ask questions like:
 
-This guide walks through who it's for, how to connect, and how to use it day-to-day.
+- "List my SolCrys workspaces."
+- "Show visibility KPIs for the last 30 days."
+- "Which prompts are losing presence?"
+- "What domains are AI engines citing for my category?"
+- "Draft a content brief for prompts where competitors are winning."
 
----
-
-## Who SolCrys MCP is for
-
-- **AEO/SEO leaders** who run weekly visibility check-ins and want their AI assistant to pull the numbers, find the gaps, and draft the action list — without bouncing between dashboards.
-- **Content strategists** who need a fast loop from "where am I losing?" to "what should I write?". The MCP surfaces the prompts, citations, and recommendations you need to draft briefs in your AI client of choice.
-- **Brand and PR teams** tracking share-of-voice and competitor mentions across AI engines, and watching for shifts that need a response.
-- **Analysts and consultants** producing reports for clients or executives. Ask once in natural language and let the assistant assemble the report from live data.
-- **RevOps and growth teams** wiring AEO signals into automated workflows — Slack alerts on visibility drops, weekly digests, content briefs generated from the latest gaps.
-
-If you're already getting value from the SolCrys dashboard, MCP is the conversational and programmatic interface to the same data — meet it where your team already works.
+The MCP server is read-only. It can retrieve your SolCrys data, but it cannot modify your workspace.
 
 ---
 
-## What you can do
+## Connection Details
 
-- **Track brand visibility** across ChatGPT, Gemini, Claude, and Perplexity in one query.
-- **Compare against competitors** — share-of-voice, mention rates, and the gaps where they're winning.
-- **See your citation profile** — which domains AI engines cite when answering about your category, and how much of it is owned-media.
-- **Drill into prompt performance** — find prompts losing presence, top gainers, sentiment shifts.
-- **Read recommendation analysis** — structured reasoning per AI response: *"why did this answer look this way, and what should we do about it?"*
-- **Audit your pages** for AEO readiness — citation-friendliness, structure, credibility scores.
-- **Pull your action queue** — open recommendations to address, ranked by impact.
-- **Automate workflows** — schedule weekly check-ins, alert on visibility drops, draft reports and content briefs from live data.
-
----
-
-## How it works
-
-1. **Connect once** — point your AI client at `https://mcp.solcrys.com/mcp` and either sign in (OAuth) or paste a Personal Access Token.
-2. **Pick a workspace** — your first call returns every workspace your account can access.
-3. **Ask anything** — your AI client picks the right tools and assembles the answer.
-
-Example queries you might run:
-
-> "List my SolCrys workspaces."
->
-> "For acme-co, show me the headline visibility KPIs for the last 30 days and tell me which engine is weakest."
->
-> "Pull the top 10 cited domains for acme-co — flag any that aren't owned media."
->
-> "For acme-co's five worst-performing prompts this month, pull the deep-analysis records and summarize the recommended actions — rank them by how often the same recommendation recurs."
->
-> "Find acme-co prompts where my presence dropped below 30% AND a competitor is winning the top-cited domain. For each, draft a 200-word content brief for a blog post that targets the prompt's intent and references the workspace's owned domains."
-
----
-
-## Connection details
-
-| | |
+| Field | Value |
 |---|---|
-| **Server URL** | `https://mcp.solcrys.com/mcp` |
-| **Transport** | Streamable HTTP |
-| **Authentication** | OAuth 2.1 (browser sign-in) or Personal Access Token |
-| **Access** | Read-only |
+| Server URL | `https://mcp.solcrys.com/mcp` |
+| Transport | Streamable HTTP |
+| Auth methods | OAuth or Personal Access Token |
+| Access | Read-only |
 
 ---
 
-## How to set up (two ways)
+## Choose Your Auth Method
 
-### Option 1 — OAuth (recommended for interactive use)
+SolCrys MCP supports two ways to connect.
 
-The flow you'll see in any modern AI client:
+| Method | Use When | What You Configure |
+|---|---|---|
+| OAuth | Your client supports browser sign-in | Server URL only |
+| Personal Access Token, or PAT | Your client asks for headers, API key, bearer token, static token, or custom auth | `Authorization: Bearer <FULL_PAT>` |
 
-1. Your client calls `claude mcp add` / equivalent with just the server URL — no token to paste.
-2. It opens your browser to the SolCrys consent screen.
-3. You log into SolCrys (or stay logged in), pick the tenant you want to grant access to, and confirm.
-4. SolCrys redirects back to your client. You're connected.
-5. Tokens refresh automatically. Revoke any time from the **Connected Apps** tab in the dashboard.
+Use this rule:
 
-**Use OAuth when** you want a real "click-to-connect" experience and your client supports it. Claude Code, Claude Desktop, Claude.ai connector, and ChatGPT/Codex all do.
-
-### Option 2 — Personal Access Token (PAT)
-
-A PAT is a long-lived bearer token you paste into your client's `Authorization: Bearer …` header.
-
-1. Sign into the SolCrys dashboard.
-2. Go to the **Workspaces** page, open the **MCP** admin tab, and switch to **Personal Access Tokens**.
-3. Click **Create token**, name it, pick which workspaces it can access, and confirm.
-4. Copy the token. **It's shown exactly once** — store it in a password manager.
-5. Paste it into your client's config (snippets below).
-
-**What the token looks like.** A full PAT is roughly:
-
-```
-gp_tok_ORRR57VP5.eyJhbGciOiJSUzI1NiIs…(very long)…fdsa-Pq3w
-```
-
-— roughly 1,000 characters, with **three dots total** (one between the prefix and the JWS, two inside the JWS itself). The 16-character string shown in the existing-tokens row (`gp_tok_ORRR57VP5`) is **only the display prefix** so you can identify the token later — it is NOT the bearer. If you've lost the full value, revoke the token and create a new one.
-
-**Use a PAT when:**
-- Your client doesn't support OAuth (Cursor, Perplexity, Gemini CLI today).
-- You're building a programmatic integration — a cron job, a custom agent, a Notion/Slack workflow.
-- You want a per-environment token (one for staging, one for prod).
-
-PATs never expire automatically — revoke them from the same dashboard page when you're done.
+**If the client opens a SolCrys browser sign-in, use OAuth. If the client asks for headers or a token, use a PAT.**
 
 ---
 
-## Per-client setup snippets
+## Option 1: OAuth
 
-The dashboard's **MCP** admin tab generates these with your URL and (optionally) token pre-filled — open the **Quick Start** panel on the Personal Access Tokens tab right after you create a token. Below is the canonical shape for each client.
+Use OAuth for interactive clients that support browser-based MCP authorization.
 
-### Step 0 — verify your token with curl
+### Setup
 
-Before pasting your PAT into any client, confirm it works end-to-end:
+1. In your AI client, add a new remote MCP server.
+2. Enter the server URL:
+
+   `https://mcp.solcrys.com/mcp`
+
+3. Choose OAuth, browser sign-in, or automatic authentication if the client asks.
+4. Your browser opens SolCrys.
+5. Sign in, choose the tenant or workspace access, and approve.
+6. Return to your AI client.
+7. Verify by asking:
+
+   "List my SolCrys workspaces."
+
+### Important
+
+Do not paste a PAT into the OAuth flow. OAuth does not need manual headers.
+
+---
+
+## Option 2: Personal Access Token, or PAT
+
+Use a PAT when your client does not support OAuth, or when you are setting up a static integration, script, RPA tool, or custom HTTP client.
+
+### Create A PAT
+
+1. Sign in to SolCrys.
+2. Go to **Workspaces -> MCP -> Personal Access Tokens**.
+3. Click **Create token**.
+4. Name the token.
+5. Choose the workspace access.
+6. Copy the full token immediately.
+
+The full PAT is shown only once. Store it in a password manager.
+
+### What A Full PAT Looks Like
+
+A full PAT starts with `gp_tok_` and is long:
+
+```text
+gp_tok_ABC123XYZ.eyJhbGciOiJSUzI1NiIs...(very long)...abc123
+```
+
+The short value shown later in the token table is only a display prefix. It is not the full token and cannot be used to connect.
+
+The token expiration date is shown in the dashboard. You can revoke or rotate a PAT any time.
+
+---
+
+## Verify A PAT With Curl
+
+Before configuring any AI client, test the PAT directly:
 
 ```bash
 curl -sS -X POST https://mcp.solcrys.com/mcp \
-  -H "Authorization: Bearer <PASTE FULL TOKEN HERE>" \
+  -H "Authorization: Bearer <PASTE_FULL_PAT_HERE>" \
   -H "Content-Type: application/json" \
   -H "Accept: application/json, text/event-stream" \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
 ```
 
-A working token returns a JSON-RPC envelope with a `tools` array. If you get `{"code":"invalid_token",…}` or `{"code":"missing_token",…}`, your token is wrong before any client is even in the picture — see Troubleshooting below.
+A working token returns a JSON-RPC response with a `tools` list.
+
+If this curl command fails, fix the token before debugging your AI client.
+
+---
+
+## Generic PAT Configuration
+
+For clients that support custom MCP headers, configure:
+
+```text
+URL: https://mcp.solcrys.com/mcp
+Header: Authorization: Bearer <FULL_PAT>
+```
+
+The request must be sent as `POST`.
+
+For raw HTTP integrations, also send:
+
+```text
+Content-Type: application/json
+Accept: application/json, text/event-stream
+```
+
+---
+
+## Example Client Setups
 
 ### Claude Code
 
+OAuth:
+
 ```bash
 claude mcp add --transport http solcrys https://mcp.solcrys.com/mcp
-# OAuth: a browser window opens for sign-in.
-
-# Or with a PAT:
-claude mcp add --transport http solcrys https://mcp.solcrys.com/mcp \
-  --header "Authorization: Bearer <PASTE TOKEN HERE>"
 ```
 
-Verify with `claude mcp list` — `solcrys` should show as registered.
+PAT:
 
-### Claude Desktop
+```bash
+claude mcp add --transport http solcrys https://mcp.solcrys.com/mcp \
+  --header "Authorization: Bearer <FULL_PAT>"
+```
 
-Claude Desktop now has a native **Add custom connector** UI for MCP — no config file editing needed.
+Verify:
 
-1. Open Claude Desktop → click **Connectors** in the sidebar (or the connectors icon in the chat composer).
-2. Click the **+** icon at the top of the Connectors panel → **Add custom connector**.
-3. Fill in the dialog:
-   - **Name:** `SolCrys AEO` (or any label)
-   - **Remote MCP server URL:** `https://mcp.solcrys.com/mcp`
-4. Click **Add**. Your browser opens to the SolCrys consent screen — sign in, pick a tenant, click Authorize.
+```bash
+claude mcp list
+```
 
-The connector card flips to **Connected**. In a chat, ask *"Use SolCrys to list my workspaces"* to verify.
-
-> **PAT path:** if you can't use OAuth (e.g., older Claude Desktop, or you want to bind a long-lived token), you can still bridge via the `mcp-remote` proxy. Edit `~/Library/Application Support/Claude/claude_desktop_config.json` and add an `mcpServers.solcrys` entry pointing `command: "npx"` at `mcp-remote` with `--header "Authorization: Bearer <YOUR_TOKEN>"`. Use the native connector UI above whenever possible — it's the supported path.
+---
 
 ### Cursor
 
@@ -158,17 +164,25 @@ Edit `~/.cursor/mcp.json`:
   "mcpServers": {
     "solcrys": {
       "url": "https://mcp.solcrys.com/mcp",
-      "headers": { "Authorization": "Bearer <PASTE TOKEN HERE>" }
+      "headers": {
+        "Authorization": "Bearer <FULL_PAT>"
+      }
     }
   }
 }
 ```
 
-Restart Cursor.
+Restart Cursor, then ask:
 
-### VS Code (Copilot Chat)
+```text
+List my SolCrys workspaces.
+```
 
-Workspace-scoped: `.vscode/mcp.json`. User-scoped: `~/.config/Code/User/mcp.json`.
+---
+
+### VS Code
+
+Use a workspace or user MCP config.
 
 ```json
 {
@@ -176,15 +190,19 @@ Workspace-scoped: `.vscode/mcp.json`. User-scoped: `~/.config/Code/User/mcp.json
     "solcrys": {
       "type": "http",
       "url": "https://mcp.solcrys.com/mcp",
-      "headers": { "Authorization": "Bearer <PASTE TOKEN HERE>" }
+      "headers": {
+        "Authorization": "Bearer <FULL_PAT>"
+      }
     }
   }
 }
 ```
 
-Reload the window: **Cmd+Shift+P → Developer: Reload Window**.
+Reload VS Code after editing the config.
 
-### Codex (OpenAI Codex CLI)
+---
+
+### Codex
 
 Edit `~/.codex/config.toml`:
 
@@ -193,140 +211,220 @@ Edit `~/.codex/config.toml`:
 url = "https://mcp.solcrys.com/mcp"
 
 [mcp_servers.solcrys.headers]
-Authorization = "Bearer <PASTE TOKEN HERE>"
+Authorization = "Bearer <FULL_PAT>"
 ```
 
-Verify with `codex mcp list`.
+Verify:
 
-### Generic HTTP / RPA / Integration platforms
+```bash
+codex mcp list
+```
 
-For platforms that speak raw HTTP — UiPath, n8n, Zapier, Make, Power Automate, or custom code — configure a single request:
+---
+
+### Custom HTTP, RPA, Or Automation Tools
+
+Use PAT auth, not OAuth.
 
 | Field | Value |
 |---|---|
-| **Method** | `POST` |
-| **URL** | `https://mcp.solcrys.com/mcp` |
-| **Auth scheme** | **API Key / Bearer / Static Token** — *not* OAuth 2.0. Selecting OAuth in the connector dropdown will ignore your PAT and trigger a separate registration flow that fails on non-HTTPS redirects. |
-| **Header 1** | `Authorization: Bearer <FULL_PAT>` |
-| **Header 2** | `Content-Type: application/json` |
-| **Header 3** | `Accept: application/json, text/event-stream` |
-| **Body** | JSON-RPC 2.0 envelope, e.g. `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"solcrys_list_workspaces","arguments":{}}}` |
+| Method | `POST` |
+| URL | `https://mcp.solcrys.com/mcp` |
+| Auth type | Bearer token, API key, static token, or custom header |
+| Header | `Authorization: Bearer <FULL_PAT>` |
+| Content-Type | `application/json` |
+| Accept | `application/json, text/event-stream` |
 
-**Watch out for:**
-- **Header-value length caps.** A full PAT is ~1,000 characters. Some RPA platforms silently truncate `Authorization` values above 256 or 512 chars — verify the value round-trips before debugging anything else.
-- **Dot stripping.** The token contains dots as JWS separators. A few platforms treat `.` as a config delimiter and mangle the value.
-- **OAuth auto-discovery.** If your platform reads the server's `WWW-Authenticate` header, it may try OAuth Dynamic Client Registration on its own and fail with `redirect_uris[0] must use https`. Force the connector into "Static Token" / "API Key" mode to bypass that.
+Test body:
 
-### Verification (any client)
-
-Once connected, ask:
-
-> "List my SolCrys workspaces."
-
-You should see a workspace array back. If you get an empty list, your token has access to a tenant with no workspaces (check the dashboard). If you get an auth error, see the Troubleshooting section below for the specific failure modes.
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 1,
+  "method": "tools/list",
+  "params": {}
+}
+```
 
 ---
 
-## Supported clients
+## Verify Any Connection
 
-| Client | OAuth | PAT |
-|---|---|---|
-| Claude Code | ✅ | ✅ |
-| Claude Desktop | ✅ | ✅ |
-| Claude.ai connector | ✅ | — |
-| ChatGPT / Codex | ✅ | ✅ |
-| Cursor | — | ✅ |
-| VS Code Copilot | — | ✅ |
-| Perplexity integrations | — | ✅ |
-| Gemini CLI | — | ✅ |
-| Custom HTTP client | — | ✅ |
+After setup, ask your AI client:
 
-If your AI client speaks MCP over HTTP, it'll work with a PAT — the table above just shows which ones also support the OAuth click-to-connect flow.
+```text
+List my SolCrys workspaces.
+```
 
----
+Success means the client can access SolCrys MCP.
 
-## How to use it: the tool catalog
-
-Every tool is read-only and workspace-scoped (except `solcrys_list_workspaces`, which is tenant-scoped — that's your discovery tool).
-
-| Tool | What it returns | When to use |
-|---|---|---|
-| `solcrys_list_workspaces` | Every workspace your account can access: name, slug, brand name, status, last measurement timestamp. | **Call this first.** Your AI client needs a workspace slug for every other tool. |
-| `solcrys_get_prompts` | The workspace's tracked prompt set — the questions SolCrys is measuring AI engines on. | When you want to see the prompts the workspace is monitoring, regardless of when each was added. |
-| `solcrys_get_visibility_insights` | The dashboard's hero view: mention rate, primary rate, share-of-voice ranking, owned-media %, over-time series, per-engine breakdown, top competitors, highlights, and gaps. | **The fastest "how am I doing?" call.** Start most analyses here. |
-| `solcrys_get_prompts_insights` | Per-prompt performance: presence %, citation %, sentiment, change vs prior window. Identifies top gainers, decliners, lowest-presence, and high-volume-low-presence prompts. | When you want to find which specific prompts are working and which are losing — and what to fix first. |
-| `solcrys_get_citations_insights` | Top-cited domains with per-engine breakdown, source-type classification (Owned / Competitor / Editorial / UGC / Other), and aggregate stats (mentions-you %, owned-media %). | When you want a citation-landscape overview — *"who's getting cited about my category, and how much of it is mine?"* |
-| `solcrys_get_citations` | Raw citation rows with rich filters: by engine, source type, domain, URL substring, mentions-you only, owned-media only. | Drill-down after citations_insights. *"Show me the actual URLs cited from acme.com last month."* |
-| `solcrys_get_deep_analysis` | Per-response structured reasoning: recommendations, action items, brand-position analysis. | When you want to understand *why* a response looked the way it did and what to do about it. |
-| `solcrys_get_tasks` | Action-center queue: title, status, priority, source. | When asking *"what should I work on next?"* — this is the curated action list. |
-| `solcrys_get_content_audit_reports` | Web-page AEO audit results: overall score, sub-scores (citation readiness, structure, credibility, quality), verdict. | When you want a page-health summary or to compare audit scores over time. |
-
-### A typical narrative flow
-
-1. `solcrys_list_workspaces` → pick a workspace slug.
-2. `solcrys_get_visibility_insights` → see headline KPIs and which engine is weakest.
-3. `solcrys_get_prompts_insights` → find the prompts driving that weakness.
-4. `solcrys_get_deep_analysis` → understand *why*, with the recommendation engine's reasoning.
-5. `solcrys_get_citations_insights` + `solcrys_get_citations` → confirm whether the gap is a citation problem (competitors winning domains) and which specific URLs to target.
-6. `solcrys_get_tasks` → see what's already in your action queue.
-7. `solcrys_get_content_audit_reports` → check whether your own pages are AEO-ready.
-
-Your AI client picks the sequence automatically based on your question — you don't have to memorize this flow. But knowing the shape of the catalog helps you ask sharper questions.
-
----
-
-## Data access & privacy
-
-- **Workspace data is strictly scoped.** A token issued for one tenant cannot see another tenant's workspaces, even if a prompt injection tells it to try.
-- **Every tool call is logged.** Contact support if you need an audit-trail export.
-
----
-
-## Requirements
-
-- A SolCrys account with at least one active workspace.
-- A supported AI client (see the table above).
+If you see an empty workspace list, authentication worked, but the account or token does not have access to any workspaces.
 
 ---
 
 ## Troubleshooting
 
-### Auth errors (PAT)
+### "Last used: never"
 
-**`{"code":"missing_token",…}` (HTTP 401).** No `Authorization` header was sent. Verify the header name (case-insensitive but must be present) and that your client isn't stripping it.
+The PAT has not successfully authenticated yet.
 
-**`{"code":"invalid_token","what_happened":"Invalid bearer token."}` (HTTP 401).** The value you're sending isn't a recognizable PAT shape. Most common causes:
-- You pasted the 16-char *display prefix* (`gp_tok_PGJ7J4JEO`) instead of the full ~1,000-char token. The full token has three dots in it.
-- Your client truncated the token (header-length cap, paste buffer limit). Use Step 0 above to verify the full string round-trips.
-- The bearer scheme is wrong: it must be `Authorization: Bearer <token>`, not `Authorization: <token>` and not `X-API-Key: <token>`.
+Run the curl test above.
 
-**Token signature or claims invalid (HTTP 401).** The bearer is JWT-shaped but isn't ours — you've likely pasted a token from a different environment, or the token was revoked. Re-issue from the dashboard.
+If curl works, the PAT is valid and the issue is your client configuration.
 
-**"Connection error / Unexpected response from server" (from your client's UI).** This is almost always a 401 that your MCP client is displaying with a generic message. Run the Step 0 curl to see the real error.
-
-### Auth errors (OAuth)
-
-**`redirect_uris[0] must use https (or http for localhost)`.** Your client tried Dynamic Client Registration with a non-HTTPS, non-loopback redirect URI (often a custom scheme like `myapp://`). Either configure the client to use an `https://…` callback or a loopback like `http://127.0.0.1:PORT/callback`, OR switch to a PAT — both are first-class.
-
-**OAuth flow stuck.** Make sure you're on a recent version of your AI client. Some older builds silently fail on PKCE. Falling back to a PAT always works.
-
-### Data errors
-
-**Empty workspace list.** Your token's tenant has no workspaces yet — create one in the dashboard.
-
-**`workspace_not_found`.** The slug doesn't exist in your tenant. Call `solcrys_list_workspaces` first; copy the `slug` (not the name).
-
-**`insufficient_scope`.** Your token doesn't carry the permission the tool requires. Reissue the token with broader access (every tool requires a `read:*` scope matching its data domain).
-
-**`validation_error` on a time range.** Some tools cap how far back you can look in a single query. Retry with a smaller window (e.g. `7d` or `14d`).
-
-### Still stuck?
-
-Run the Step 0 curl and email the raw `code` + `what_happened` to support@solcrys.com — they pinpoint the failure within minutes.
+If curl fails, create a new PAT and try again.
 
 ---
 
-## Support
+### `missing_token`
 
-- **Email** — support@solcrys.com
-- **Privacy policy** — https://solcrys.com/privacy
+No `Authorization` header reached SolCrys.
+
+Check that your client sends:
+
+```text
+Authorization: Bearer <FULL_PAT>
+```
+
+Do not use:
+
+```text
+Authorization: <FULL_PAT>
+X-API-Key: <FULL_PAT>
+Bearer: <FULL_PAT>
+```
+
+---
+
+### `invalid_token`
+
+The header reached SolCrys, but the token was not accepted.
+
+Common causes:
+
+- You pasted the short display prefix instead of the full PAT.
+- The token was truncated by the client.
+- The token contains extra spaces or line breaks.
+- The token was revoked.
+- The token expired.
+- The token came from a different environment.
+
+Create a new PAT and verify it with curl.
+
+---
+
+### `redirect_uris[0] must use https (or http for localhost)`
+
+Your client is trying to use OAuth registration.
+
+OAuth redirect URLs must use either:
+
+```text
+https://...
+http://localhost/...
+http://127.0.0.1/...
+```
+
+If you meant to use a PAT, change the client auth type to one of:
+
+```text
+Bearer Token
+API Key
+Static Token
+Custom Header
+```
+
+Then configure:
+
+```text
+Authorization: Bearer <FULL_PAT>
+```
+
+---
+
+### "Unexpected response from server"
+
+Many MCP clients hide the real HTTP error.
+
+Run the curl test. The curl response will usually show the actual issue: `missing_token`, `invalid_token`, or another specific error.
+
+---
+
+### Empty Workspace List
+
+Authentication worked, but the authenticated account or PAT does not have access to any workspaces.
+
+Check the workspace access in SolCrys, or create a new PAT with the correct workspace access.
+
+---
+
+### `workspace_not_found`
+
+The workspace slug is wrong or not accessible to the token.
+
+Ask:
+
+```text
+List my SolCrys workspaces.
+```
+
+Use the `slug` from that response, not the display name.
+
+---
+
+### `insufficient_scope`
+
+The token does not have the required read scope.
+
+Create a new PAT with broader read access.
+
+---
+
+## What To Send Support
+
+If you are still stuck, send support:
+
+- AI client name and version
+- Auth method used: OAuth or PAT
+- The curl response body
+- The PAT prefix only, for example `gp_tok_ABC123...`
+
+Never send the full PAT.
+
+Support: `support@solcrys.com`
+
+---
+
+## Example Prompts
+
+After setup, try:
+
+```text
+List my SolCrys workspaces.
+```
+
+```text
+For <workspace-slug>, show visibility KPIs for the last 30 days.
+```
+
+```text
+For <workspace-slug>, which prompts are losing presence?
+```
+
+```text
+For <workspace-slug>, show the top cited domains and flag owned-media gaps.
+```
+
+```text
+For <workspace-slug>, summarize the highest-priority recommendations from deep analysis.
+```
+
+---
+
+## Security Notes
+
+- SolCrys MCP is read-only.
+- Workspace access is scoped to the authenticated account or PAT.
+- PATs should be stored in a password manager.
+- Revoke unused PATs from the MCP admin page.
+- Do not share full PATs with support or paste them into chat tools.
