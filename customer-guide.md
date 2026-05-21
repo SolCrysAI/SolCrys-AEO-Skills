@@ -86,6 +86,14 @@ A PAT is a long-lived bearer token you paste into your client's `Authorization: 
 4. Copy the token. **It's shown exactly once** — store it in a password manager.
 5. Paste it into your client's config (snippets below).
 
+**What the token looks like.** A full PAT is roughly:
+
+```
+gp_tok_ORRR57VP5.eyJhbGciOiJSUzI1NiIs…(very long)…fdsa-Pq3w
+```
+
+— roughly 1,000 characters, with **three dots total** (one between the prefix and the JWS, two inside the JWS itself). The 16-character string shown in the existing-tokens row (`gp_tok_ORRR57VP5`) is **only the display prefix** so you can identify the token later — it is NOT the bearer. If you've lost the full value, revoke the token and create a new one.
+
 **Use a PAT when:**
 - Your client doesn't support OAuth (Cursor, Perplexity, Gemini CLI today).
 - You're building a programmatic integration — a cron job, a custom agent, a Notion/Slack workflow.
@@ -98,6 +106,20 @@ PATs never expire automatically — revoke them from the same dashboard page whe
 ## Per-client setup snippets
 
 The dashboard's **MCP** admin tab generates these with your URL and (optionally) token pre-filled — open the **Quick Start** panel on the Personal Access Tokens tab right after you create a token. Below is the canonical shape for each client.
+
+### Step 0 — verify your token with curl
+
+Before pasting your PAT into any client, confirm it works end-to-end:
+
+```bash
+curl -sS -X POST https://mcp.solcrys.com/mcp \
+  -H "Authorization: Bearer <PASTE FULL TOKEN HERE>" \
+  -H "Content-Type: application/json" \
+  -H "Accept: application/json, text/event-stream" \
+  -d '{"jsonrpc":"2.0","id":1,"method":"tools/list","params":{}}'
+```
+
+A working token returns a JSON-RPC envelope with a `tools` array. If you get `{"code":"invalid_token",…}` or `{"code":"missing_token",…}`, your token is wrong before any client is even in the picture — see Troubleshooting below.
 
 ### Claude Code
 
@@ -176,13 +198,32 @@ Authorization = "Bearer <PASTE TOKEN HERE>"
 
 Verify with `codex mcp list`.
 
+### Generic HTTP / RPA / Integration platforms
+
+For platforms that speak raw HTTP — UiPath, n8n, Zapier, Make, Power Automate, or custom code — configure a single request:
+
+| Field | Value |
+|---|---|
+| **Method** | `POST` |
+| **URL** | `https://mcp.solcrys.com/mcp` |
+| **Auth scheme** | **API Key / Bearer / Static Token** — *not* OAuth 2.0. Selecting OAuth in the connector dropdown will ignore your PAT and trigger a separate registration flow that fails on non-HTTPS redirects. |
+| **Header 1** | `Authorization: Bearer <FULL_PAT>` |
+| **Header 2** | `Content-Type: application/json` |
+| **Header 3** | `Accept: application/json, text/event-stream` |
+| **Body** | JSON-RPC 2.0 envelope, e.g. `{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"solcrys_list_workspaces","arguments":{}}}` |
+
+**Watch out for:**
+- **Header-value length caps.** A full PAT is ~1,000 characters. Some RPA platforms silently truncate `Authorization` values above 256 or 512 chars — verify the value round-trips before debugging anything else.
+- **Dot stripping.** The token contains dots as JWS separators. A few platforms treat `.` as a config delimiter and mangle the value.
+- **OAuth auto-discovery.** If your platform reads the server's `WWW-Authenticate` header, it may try OAuth Dynamic Client Registration on its own and fail with `redirect_uris[0] must use https`. Force the connector into "Static Token" / "API Key" mode to bypass that.
+
 ### Verification (any client)
 
 Once connected, ask:
 
 > "List my SolCrys workspaces."
 
-You should see a workspace array back. If you get an empty list, your token has access to a tenant with no workspaces (check the dashboard). If you get an auth error, double-check the bearer header.
+You should see a workspace array back. If you get an empty list, your token has access to a tenant with no workspaces (check the dashboard). If you get an auth error, see the Troubleshooting section below for the specific failure modes.
 
 ---
 
@@ -250,23 +291,42 @@ Your AI client picks the sequence automatically based on your question — you d
 
 ## Troubleshooting
 
-**Empty workspace list.** Your token has access to a tenant that hasn't created any workspaces yet — log into the dashboard and create one.
+### Auth errors (PAT)
 
-**`workspace_not_found` error.** The workspace slug doesn't exist in your tenant. Ask your AI client to list workspaces first.
+**`{"code":"missing_token",…}` (HTTP 401).** No `Authorization` header was sent. Verify the header name (case-insensitive but must be present) and that your client isn't stripping it.
 
-**`insufficient_scope` error.** Your token doesn't carry the permission the tool requires. Reissue the token with broader access from the dashboard.
+**`{"code":"invalid_token","what_happened":"Invalid bearer token."}` (HTTP 401).** The value you're sending isn't a recognizable PAT shape. Most common causes:
+- You pasted the 16-char *display prefix* (`gp_tok_PGJ7J4JEO`) instead of the full ~1,000-char token. The full token has three dots in it.
+- Your client truncated the token (header-length cap, paste buffer limit). Use Step 0 above to verify the full string round-trips.
+- The bearer scheme is wrong: it must be `Authorization: Bearer <token>`, not `Authorization: <token>` and not `X-API-Key: <token>`.
+
+**Token signature or claims invalid (HTTP 401).** The bearer is JWT-shaped but isn't ours — you've likely pasted a token from a different environment, or the token was revoked. Re-issue from the dashboard.
+
+**"Connection error / Unexpected response from server" (from your client's UI).** This is almost always a 401 that your MCP client is displaying with a generic message. Run the Step 0 curl to see the real error.
+
+### Auth errors (OAuth)
+
+**`redirect_uris[0] must use https (or http for localhost)`.** Your client tried Dynamic Client Registration with a non-HTTPS, non-loopback redirect URI (often a custom scheme like `myapp://`). Either configure the client to use an `https://…` callback or a loopback like `http://127.0.0.1:PORT/callback`, OR switch to a PAT — both are first-class.
+
+**OAuth flow stuck.** Make sure you're on a recent version of your AI client. Some older builds silently fail on PKCE. Falling back to a PAT always works.
+
+### Data errors
+
+**Empty workspace list.** Your token's tenant has no workspaces yet — create one in the dashboard.
+
+**`workspace_not_found`.** The slug doesn't exist in your tenant. Call `solcrys_list_workspaces` first; copy the `slug` (not the name).
+
+**`insufficient_scope`.** Your token doesn't carry the permission the tool requires. Reissue the token with broader access (every tool requires a `read:*` scope matching its data domain).
 
 **`validation_error` on a time range.** Some tools cap how far back you can look in a single query. Retry with a smaller window (e.g. `7d` or `14d`).
 
-**OAuth flow stuck.** Make sure you're on a recent version of your AI client. If OAuth still fails, fall back to the PAT path — it always works.
+### Still stuck?
+
+Run the Step 0 curl and email the raw `code` + `what_happened` to support@solcrys.com — they pinpoint the failure within minutes.
 
 ---
 
 ## Support
 
 - **Email** — support@solcrys.com
-- **Dashboard** — in-app chat at **Settings → Help**
-- **Status** — https://status.solcrys.com
 - **Privacy policy** — https://solcrys.com/privacy
-
-If you're integrating MCP into a product or platform, ask us about Enterprise — we can issue scoped tokens per-customer and tailor the integration to your workflow.
