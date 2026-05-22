@@ -36,6 +36,8 @@ Use this rule:
 
 **If the client opens a SolCrys browser sign-in, use OAuth. If the client asks for headers or a token, use a PAT.**
 
+One client-specific note: **Claude Desktop is OAuth-only** for remote MCP servers. There is no PAT path for Claude Desktop — see the Claude Desktop section below.
+
 ---
 
 ## Option 1: OAuth
@@ -155,6 +157,28 @@ claude mcp list
 
 ---
 
+### Claude Desktop
+
+Claude Desktop supports remote MCP servers **only** through the in-app **Custom Connector** flow (OAuth). Do not edit `claude_desktop_config.json` for SolCrys — Anthropic only documents that file for local stdio servers, not remote HTTP servers.
+
+1. Open Claude Desktop and click **Connectors** in the sidebar (or the connectors icon in the chat composer).
+2. Click the **+** at the top of the Connectors panel and choose **Add custom connector**.
+3. Fill in:
+
+   - **Name:** SolCrys AEO (or any label)
+   - **Remote MCP server URL:** `https://mcp.solcrys.com/mcp`
+
+4. Click **Add**. Claude Desktop opens a browser tab for OAuth consent on SolCrys — sign in, pick a tenant, click **Authorize**.
+5. The connector card flips to **Connected**. Ask in a chat:
+
+   ```text
+   List my SolCrys workspaces.
+   ```
+
+There is no PAT path for Claude Desktop. If you need a long-lived token (scripting, RPA), use **Claude Code** or **Cursor** with a PAT — both are documented elsewhere in this guide.
+
+---
+
 ### Cursor
 
 Edit `~/.cursor/mcp.json`:
@@ -199,6 +223,21 @@ Use a workspace or user MCP config.
 ```
 
 Reload VS Code after editing the config.
+
+> **Using the Continue extension instead of native VS Code MCP?** Edit `~/.continue/config.json` with the same shape under the `mcpServers` key:
+>
+> ```json
+> {
+>   "mcpServers": {
+>     "solcrys": {
+>       "url": "https://mcp.solcrys.com/mcp",
+>       "headers": { "Authorization": "Bearer <FULL_PAT>" }
+>     }
+>   }
+> }
+> ```
+>
+> Reload VS Code after editing.
 
 ---
 
