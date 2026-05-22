@@ -243,13 +243,19 @@ Reload VS Code after editing the config.
 
 ### Codex
 
-Edit `~/.codex/config.toml`:
+Codex CLI supports bearer tokens for streamable HTTP MCP servers. Prefer keeping the full PAT in an environment variable and referencing that variable from `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.solcrys]
 url = "https://mcp.solcrys.com/mcp"
+bearer_token_env_var = "MCP_PAT_TOKEN"
+```
 
-[mcp_servers.solcrys.headers]
+Set `MCP_PAT_TOKEN` in the shell where you launch Codex.
+
+If you need to put the header directly in Codex config instead, use `http_headers`:
+
+[mcp_servers.solcrys.http_headers]
 Authorization = "Bearer <FULL_PAT>"
 ```
 
