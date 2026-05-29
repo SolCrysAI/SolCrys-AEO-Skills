@@ -1,6 +1,6 @@
 # SolCrys AEO MCP
 
-Everything you need to connect your AI client to the SolCrys AEO Answer Engine Optimization platform, plus four ready-to-use skills that demonstrate the kinds of analysis the MCP unlocks.
+Everything you need to connect your AI client to the SolCrys AEO Answer Engine Optimization platform, plus five ready-to-use skills that demonstrate the kinds of analysis the MCP unlocks.
 
 The SolCrys MCP server lets your favorite AI client — Claude Code, Claude Desktop, Cursor, VS Code Copilot, ChatGPT/Codex, and others — query your brand-visibility data across ChatGPT, Gemini, Perplexity, and Claude. Ask in plain English; your AI client pulls the answer (or drafts the deliverable) straight from your SolCrys data.
 
@@ -21,16 +21,17 @@ Once your workspace is live, open [**customer-guide.md**](./customer-guide.md) f
 | File | Purpose |
 |---|---|
 | [customer-guide.md](./customer-guide.md) | The full user guide — who SolCrys MCP is for, how to connect (OAuth or PAT), per-client setup snippets for the 5 most-asked clients, the tool catalog, and troubleshooting. **Start here.** |
-| [skills/](./skills/) | Four production-ready Claude skills that demonstrate end-to-end workflows on top of the MCP tools. Drop them into your AI client's skill directory or use them as prompt templates. |
+| [skills/](./skills/) | Five production-ready Claude skills that demonstrate end-to-end workflows on top of the MCP tools. Drop them into your AI client's skill directory or use them as prompt templates. |
 | [skills/soul.md](./skills/soul.md) | The rule-set every skill obeys: data-grounded claims only, AEO-goal-aligned recommendations, fact-grounded writing with web search and user-supplied docs. Read this if you're forking or building your own skills. |
 
-## The four skills
+## The five skills
 
 | Skill | Deliverable | When to trigger |
 |---|---|---|
 | [solcrys-weekly-cmo-brief](./skills/solcrys-weekly-cmo-brief/SKILL.md) | One-page executive brief: headline, key numbers, what's trending, where we're losing, recommended actions, forward-looking note. | *"Generate this week's CMO brief", "Summarize what changed", "What should I tell my CMO"* |
 | [solcrys-domain-influence-report](./skills/solcrys-domain-influence-report/SKILL.md) | Citation landscape report broken out by source type (Competitor → Editorial → UGC → Owned) with analysis per block and content-strategy implications. | *"Who's getting cited about our category", "Editorial vs UGC analysis", "Domain influence report"* |
 | [solcrys-brand-footprint-gap-analysis](./skills/solcrys-brand-footprint-gap-analysis/SKILL.md) | Two-part report: the URLs where the brand IS surfacing in AI answers (the footprint), and the high-volume prompts where it's missing (the gaps). | *"Where am I showing up in AI answers", "Content footprint audit", "Where are we missing"* |
+| [solcrys-monthly-aeo-execution-plan](./skills/solcrys-monthly-aeo-execution-plan/SKILL.md) | Executive "Winning the AI Answer Layer" playbook (Word doc): diagnoses the brand's AI visibility, explains why the category leader is cited more, maps the owned/editorial/UGC footprint gaps, and lays out a phased, indexing-aware content roadmap with KPIs. | *"Generate a monthly AEO execution plan for [workspace] from the last 30 days of data", "AEO/GEO roadmap for the next quarter", "Plan to close our AI share-of-voice gap", "How do we win the AI answer layer"* |
 | [solcrys-action-driven-content](./skills/solcrys-action-driven-content/SKILL.md) | Publication-ready first-draft web content (blog post, landing-page section, or FAQ entry) for a task pulled from the action queue, grounded in deep-analysis reasoning and the competitive citation landscape. | *"Pick an action from my queue and draft the content", "Write the blog post for task X", "Execute one of my AEO recommendations"* |
 
 ## Installing the skills
@@ -64,7 +65,8 @@ cp -r /tmp/solcrys-aeo-skills/skills/* .claude/skills/
 ```bash
 ls ~/.claude/skills/    # or .claude/skills/ for project scope
 # Expected output: solcrys-action-driven-content, solcrys-brand-footprint-gap-analysis,
-#                  solcrys-domain-influence-report, solcrys-weekly-cmo-brief, soul.md
+#                  solcrys-domain-influence-report, solcrys-monthly-aeo-execution-plan,
+#                  solcrys-weekly-cmo-brief, soul.md
 ```
 
 Then start a Claude Code session and try a triggering phrase like *"Generate this week's CMO brief for [your-workspace-slug]"* — Claude Code should activate the skill automatically based on its description.
