@@ -69,23 +69,54 @@ Pull, for the chosen `timeRange`:
   and will exceed the tool limit.** When it does, follow the file-extraction pattern in `references/solcrys_mcp.md`
   (spawn a subagent to jq/parse the saved file and return a themed briefing) so it stays out of main context.
 
-### 3. Light web research (verify, don't assume)
+### 3. Crawl the brand's own site — build the owned-content coverage map (MANDATORY)
+**All 1P (owned) content actions MUST be grounded in the brand's existing website. Never recommend creating
+a page the brand already has.** Mature brands usually have far more content than you'd assume — verify before
+you prescribe production.
+- Pull the brand's site: fetch the homepage, the `/resources`, `/blog`, or `/guides` index, and `sitemap.xml`;
+  enumerate the existing pages (titles + URLs). For brands with large libraries, fetch the index/hub pages and
+  a representative sample of the prompt-relevant pages, not every URL.
+- Build an **owned-content coverage map**: for each tracked prompt — especially the 0-mention/"invisible" ones —
+  find the existing page that already targets it. Record the URL, its publish/update date, and whether it
+  renders server-side (AI crawlers don't execute JavaScript — a client-rendered page is invisible to them even
+  if it looks fine in a browser; cross-check against `solcrys_get_content_audit_reports`).
+- Classify each 1P action as **OPTIMIZE/ACTIVATE an existing page** (indexation, schema, internal links,
+  freshness, answer-shape) vs **CREATE** — and create only the genuinely missing pages. When coverage is already
+  high, the Month-1 roadmap is an *activation* plan (get the existing library indexed and cited), not a
+  production plan. A near-zero owned-citation share next to a deep, recently-published library is a pickup/
+  indexation problem, not a content-supply problem — say so.
+- This research becomes playbook section **1.4 (Existing owned coverage map)** and reshapes Section 4 (roadmap).
+
+### 4. Verify claims and vet third-party targets (web research)
 - Verify the brand's headline product/feature claims and flag internal inconsistencies (e.g., the same stat
   stated differently across pages) — engines will surface the weakest version.
 - Fact-check the competitor's marquee claims; mark any that aren't supported by independent sources.
 - Identify real, current targets for the appendices: editorial outlets with contributor/PR pathways,
-  the category "best X software" roundups the engines already cite, relevant subreddits, and named LinkedIn
-  voices in the brand's industry. Pull these from search + the brand's own site, not from memory of other clients.
+  the category "best X software" roundups the engines already cite, relevant subreddits, and named industry voices.
+- **VET EVERY 3P PITCH TARGET BEFORE IT ENTERS APPENDIX C OR D — never recommend pitching content to a
+  competitor's own property.** Build the competitor set first (the brands in the SOV ranking, any domain whose
+  name matches a competitor, and every rival named on the brand's own `/compare/*` pages). Then, for each
+  candidate editorial outlet, roundup, newsletter, or analyst, confirm ownership and EXCLUDE it if it is:
+  (a) owned by a competitor (a competitor's blog/resource hub); (b) a vendor that sells a competing AEO /
+  AI-visibility / GEO product (even adjacent ones — e.g. a media-monitoring suite that now ships AI-visibility
+  tracking); or (c) authored by / affiliated with a competitor's employee (check the author's bio/LinkedIn —
+  a "creator" employed by a rival is not independent). When ownership is unclear, **use a subagent to confirm
+  via web search.** Pitching to a competitor's site is never a valid action and only amplifies the rival.
+- Prefer non-competitor destinations: independent tech/marketing media, independent analysts/newsletters not
+  employed by a competitor, and neutral third-party **review marketplaces** any vendor can be listed on
+  (G2, Capterra, TrustRadius, Gartner Peer Insights, SourceForge, Software Advice) — engines lean on these for
+  "best/compare" prompts.
 
-### 4. Synthesize the takeaways
+### 5. Synthesize the takeaways
 From the data, derive:
+- **Owned coverage vs. pickup** (from Phase 3): which invisible prompts already have a matching owned page, and whether the gap is production (missing pages) or pickup (pages exist but aren't indexed/cited). Default for content-rich brands is pickup.
 - **Content footprint** by layer: Owned (1P) %, Editorial (3P) %, Industry/Other (3P) %, UGC % — and where the brand is present vs. absent. The `by_type` and `top_domains` fields from citations insights give you this directly.
 - **Why the leader wins**: compare owned citable-page breadth (citations and URL counts), tier-1 editorial halo, any parent/partner amplification, and primary-mention rate.
 - **Citation insights**: Top ~5 editorial domains and Top ~5 UGC domains (note when a single domain dominates a layer — e.g., UGC is often almost entirely one community site).
 - **Prompt standing**: how many prompts the brand is invisible on (0 mentions), weak on, and leading on — the under-performing prompts are where SOV points are won.
 - **Weakest engine** (usually the biggest upside) and overall sentiment.
 
-### 5. Build the playbook document
+### 6. Build the playbook document
 Follow `references/playbook_outline.md` for the exact section spec. Assemble a `data.json` matching the
 schema in `assets/data.example.json`, then render with the bundled builder:
 
@@ -98,7 +129,12 @@ node <skill-path>/assets/build_playbook.js data.json "<Brand>_AEO_Playbook.docx"
 The builder renders every section, skips any you omit, and styles a clean executive doc with per-section
 source boxes. Validate with the docx skill's validator if available, then present the `.docx` to the user.
 
-### 6. Quality bar
+### 7. Quality bar
+- **1P actions are grounded in the live site.** Every owned-content recommendation names an existing page
+  (optimize/activate) or is explicitly flagged as one of the few genuinely-missing pages to create. No "publish
+  a roundup" when that roundup already exists on the brand's domain.
+- **No 3P pitch target is competitor-owned or competitor-affiliated.** Appendices C and D contain only vetted,
+  independent destinations (see Phase 4). If you cannot confirm a target is independent, drop it.
 - Every data claim ties to either SolCrys or a cited URL. Put a small **Sources** box at the end of each
   data-bearing section and each appendix (the builder supports this).
 - Keep vendor performance figures labeled as company claims unless backed by an independent source.

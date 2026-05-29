@@ -53,9 +53,9 @@ function colWidths(n, given) {
 function renderTable(t) {
   const cols = t.cols || [];
   const widths = colWidths(cols.length, t.widths);
-  const head = new TableRow({ tableHeader: true, children: cols.map((cc, i) =>
+  const head = new TableRow({ tableHeader: true, cantSplit: true, children: cols.map((cc, i) =>
     cell(cc, { w: widths[i], fill: T.head, bold: true, color: "FFFFFF" })) });
-  const rows = (t.rows || []).map((r, i) => new TableRow({ children: r.map((cv, j) => {
+  const rows = (t.rows || []).map((r, i) => new TableRow({ cantSplit: true, children: r.map((cv, j) => {
     let fill = i % 2 === 0 ? "FFFFFF" : T.light;
     if (t.highlightLastCol && j === cols.length - 1) fill = T.good;
     if (t.highlightFirstRow && i === 0) fill = T.good;
