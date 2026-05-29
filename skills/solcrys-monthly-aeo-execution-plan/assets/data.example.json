@@ -33,7 +33,7 @@
     { "h2": "1.2  Why [Leader]'s AI visibility is stronger" },
     { "table": { "cols": ["Advantage", "What the data shows", "Implication"],
       "rows": [
-        ["More owned citable pages", "[leader] cited [a]× across [b] URLs vs [brand] [c]× across [d]", "Build breadth of answer pages"],
+        ["More owned citable pages", "[leader] cited [a]× across [b] URLs vs [brand] [c]× across [d]", "Build breadth of citable owned pages (refresh-first)"],
         ["Tier-1 editorial halo", "[tier-1 outlet] cited [e]×", "Earn 1–2 marquee features"],
         ["Partner / parent amplification", "[partner domain] cited [f]×", "Lean on the brand's own moats"],
         ["Category default + recency", "[g]% primary vs [h]%; fresh coverage", "Sustained cadence to stay top-of-retrieval"]
@@ -91,8 +91,8 @@
     { "p": "Goal: 100% of owned content live and crawlable by week 4; start long-lead earned-media pitches now.", "bold": true },
     { "bullets": [
       "Reconcile conflicting facts (Appendix A); confirm AI crawlers unblocked; submit sitemaps.",
-      "Rebuild core product pages as definitional, answer-shaped pages with FAQ/Product/HowTo schema.",
-      "Publish the invisible-prompt pages and a comparison hub vs [Leader].",
+      "Refresh existing owned pages into answer-shaped, citable form: [/existing-page-a], [/existing-page-b] (already cited but not answer-shaped); add Product/FAQ schema where it earns rich results.",
+      "Create only the gap pages — where the inventory found no existing coverage: [/new-page] for invisible prompt '[prompt]', plus a comparison hub vs [Leader].",
       "Publish 2 verified case studies; start editorial pitches and disclosed Reddit/LinkedIn presence." ] },
     { "note": "Closes owned thinness + invisible prompts. Starts the ChatGPT (6–12wk) and Perplexity (2–4wk) clocks. KPI: owned AEO score up; pages indexed." },
     { "h2": "Month 2 — Pickup & Amplify (the buffer)" },
@@ -108,7 +108,7 @@
     { "space": true },
     { "table": { "cols": ["Month", "Phase / layer", "Headline deliverables", "Engine timing"],
       "rows": [
-        ["1", "Produce & publish (1P + pitch 3P)", "Fact fix; core pages + schema; invisible-prompt pages; comparison hub; case studies; start pitches", "Starts ChatGPT & Perplexity clocks"],
+        ["1", "Produce & publish (1P + pitch 3P)", "Fact fix; refresh existing owned pages; create gap-only pages; comparison hub; case studies; start pitches", "Starts ChatGPT & Perplexity clocks"],
         ["2", "Pickup & amplify (3P + UGC)", "Earned media; roundup inclusions; PR; YouTube; Reddit; exec LinkedIn", "Perplexity + Google AIO pickup"],
         ["3", "Compound & measure (all)", "Refresh lagging pages; tier-1 feature; final push; measure; set cadence", "ChatGPT catch-up + freshness"]
       ], "widths": [700, 2300, 4360, 2000] } },
@@ -154,30 +154,35 @@
     { "sources": [["Brand case studies", "https://example.com"]], "sourcesTitle": "Sources — Appendix B" },
 
     { "h1": "Appendix C — Editorial Media Targets" },
-    { "table": { "cols": ["Outlet", "Pathway", "Angle"],
-      "rows": [["[trade outlet]", "Guest byline / contributor", "[brand-specific angle]"], ["[analyst/community]", "Analyst briefing / podcast", "[data story]"]],
-      "widths": [2700, 3800, 2860] } },
-    { "sources": [["[Outlet] contributor guidelines", "https://example.com"]], "sourcesTitle": "Sources — Appendix C" },
+    { "p": "Vetted against competitors: each outlet is one a tracked competitor is already cited from (a proven channel the brand is missing). Speculative outlets are labeled as such and ranked last." },
+    { "table": { "cols": ["Outlet", "Competitor cited here?", "Pathway", "Angle"],
+      "rows": [
+        ["[trade outlet]", "[Leader] cited [n]×", "Guest byline / contributor", "[brand-specific angle]"],
+        ["[analyst/community]", "[competitor] featured", "Analyst briefing / podcast", "[data story]"],
+        ["[adjacent outlet]", "Speculative — none cited yet", "Contributor", "[angle]"]
+      ],
+      "widths": [2200, 2600, 2700, 1860] } },
+    { "sources": [["[Outlet] contributor guidelines", "https://example.com"], ["SolCrys citation data — competitor presence by domain", "https://example.com"]], "sourcesTitle": "Sources — Appendix C" },
 
     { "h1": "Appendix D — Listicle / Roundup Inclusion" },
-    { "p": "The 'best [category]' roundups engines already cite that omit the brand." },
-    { "table": { "cols": ["Roundup", "Status in data", "Action"],
-      "rows": [["[roundup domain]", "Cited [n]×; brand absent", "Editor outreach / submit listing"]],
-      "widths": [2900, 3600, 2860] } },
+    { "p": "The 'best [category]' roundups engines already cite that omit the brand — proven because competitors are already on the list." },
+    { "table": { "cols": ["Roundup", "Cited / competitors listed", "Action"],
+      "rows": [["[roundup domain]", "Cited [n]×; lists [Leader] + [competitor]; brand absent", "Editor outreach / submit listing"]],
+      "widths": [2700, 3800, 2860] } },
     { "sources": [["[Roundup]", "https://example.com"]], "sourcesTitle": "Sources — Appendix D" },
 
     { "h1": "Appendix E — Community / Reddit Playbook" },
-    { "p": "The top community domain feeds ChatGPT + Google AIO; the brand is absent. Disclosed, helpful participation by a named expert — not promotion. Counts approximate; verify live." },
-    { "table": { "cols": ["Community", "~Members*", "Relevance", "Priority"],
-      "rows": [["[subreddit]", "~[n]", "[buyer/practitioner]", "HIGH"], ["[subreddit]", "~[n]", "[adjacent]", "MED"]],
-      "widths": [2550, 1300, 4000, 1510] } },
+    { "p": "The top community domain feeds ChatGPT + Google AIO; the brand is absent. Priority is set by competitor presence — communities where a competitor is already cited or recommended rank HIGH. Disclosed, helpful participation by a named expert — not promotion. Counts approximate; verify live." },
+    { "table": { "cols": ["Community", "~Members*", "Competitor cited / active?", "Priority"],
+      "rows": [["[subreddit]", "~[n]", "[Leader] recommended in [n] cited threads", "HIGH"], ["[subreddit]", "~[n]", "Speculative — none cited yet", "MED"]],
+      "widths": [2300, 1300, 4250, 1510] } },
     { "bullets": ["Disclose affiliation; help-first; ~1-in-10 self-promo ratio; never post confidential data.", "Starter posts built from the Proof Library (Appendix B)."] },
     { "sources": [["Community list + member counts", "https://example.com"]], "sourcesTitle": "Sources — Appendix E" },
 
     { "h1": "Appendix F — LinkedIn / Professional-Network Playbook" },
-    { "table": { "cols": ["Person / community", "Who", "Engagement"],
-      "rows": [["[named industry voice]", "[role]", "Offer data / guest content"], ["[association]", "[authority]", "Join & co-publish"]],
-      "widths": [2700, 3300, 3360] } },
+    { "table": { "cols": ["Person / community", "Competitor presence", "Engagement"],
+      "rows": [["[named industry voice] ([role])", "[Leader] execs cited / quoted here", "Offer data / guest content"], ["[association]", "[competitor] is a member / partner", "Join & co-publish"]],
+      "widths": [3000, 3000, 3360] } },
     { "bullets": ["Weekly: 1 results post (Appendix B stat) + 1 explainer, posted from named execs — personal profiles are more citable than the company page.", "Repurpose every earned-media piece as a post to create another citable URL."] },
     { "sources": [["[Named voice] profile", "https://example.com"]], "sourcesTitle": "Sources — Appendix F" },
 

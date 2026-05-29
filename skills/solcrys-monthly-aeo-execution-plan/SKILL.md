@@ -73,9 +73,15 @@ Pull, for the chosen `timeRange`:
 - Verify the brand's headline product/feature claims and flag internal inconsistencies (e.g., the same stat
   stated differently across pages) — engines will surface the weakest version.
 - Fact-check the competitor's marquee claims; mark any that aren't supported by independent sources.
-- Identify real, current targets for the appendices: editorial outlets with contributor/PR pathways,
-  the category "best X software" roundups the engines already cite, relevant subreddits, and named LinkedIn
-  voices in the brand's industry. Pull these from search + the brand's own site, not from memory of other clients.
+- **Inventory the brand's existing owned pages** (used to ground the 1P actions in Phase 4). Start from the
+  owned citation URLs the engines already pull (`solcrys_get_citations` with `owned: true`), the pages in the
+  content-audit reports, and any pages named in deep-analysis; then skim the brand's sitemap/site for pages
+  that already cover a tracked prompt's topic. Know what exists before recommending anyone build it.
+- Identify real, current candidate targets for the 3P appendices: editorial outlets with contributor/PR
+  pathways, the category "best X software" roundups the engines already cite, relevant subreddits, and named
+  LinkedIn voices in the brand's industry. Pull these from search + the brand's own site, not from memory of
+  other clients. **For each candidate, record whether a tracked competitor is already present there** — cited
+  on that domain, mentioned on that page, or active in that community — which is the vetting signal Phase 4 uses.
 
 ### 4. Synthesize the takeaways
 From the data, derive:
@@ -84,6 +90,8 @@ From the data, derive:
 - **Citation insights**: Top ~5 editorial domains and Top ~5 UGC domains (note when a single domain dominates a layer — e.g., UGC is often almost entirely one community site).
 - **Prompt standing**: how many prompts the brand is invisible on (0 mentions), weak on, and leading on — the under-performing prompts are where SOV points are won.
 - **Weakest engine** (usually the biggest upside) and overall sentiment.
+- **Owned-page action map (grounds the 1P roadmap)**: cross each prompt you intend to target against the owned-page inventory from Phase 3. Each owned action is then either *refresh a specific existing URL* (the page exists but isn't answer-shaped/citable for that prompt) or *create a new page* — and "create" is allowed only when the inventory shows no existing page covers the prompt. Don't recommend building content the brand already has; upgrade the page it has.
+- **3P target vetting (grounds the appendices)**: classify each candidate editorial outlet, roundup, subreddit, and LinkedIn voice by competitor presence. *Proven* = a tracked competitor is cited/mentioned/active there while the brand is absent (a channel demonstrably feeding category citations that the brand is missing from) — these rank first. *Speculative* = no evidence any tracked brand is cited there yet; keep only if genuinely useful and label it as such. Never present a speculative target as a proven one.
 
 ### 5. Build the playbook document
 Follow `references/playbook_outline.md` for the exact section spec. Assemble a `data.json` matching the
@@ -105,6 +113,11 @@ source boxes. Validate with the docx skill's validator if available, then presen
 - Set realistic expectations: SOV is a **lagging** metric. Month 1 should track leading indicators
   (pages indexed, bots crawling, first Perplexity pickups), with SOV lift arriving in later months.
   Use the trajectory table so a quiet early dashboard isn't mistaken for failure.
+- **Ground every owned (1P) action**: name the specific existing URL to refresh, or state the gap ("no
+  current page covers [prompt]") before proposing a new page. No generic "build answer pages" deliverables.
+- **Vet every 3P target**: each editorial outlet, roundup, community, and LinkedIn target carries its
+  evidence — which tracked competitor is cited/present there, or an explicit "speculative — no category brand
+  cited here yet" label. Proven targets (competitor present, brand absent) rank above speculative ones.
 
 ## Anti-leak rule (important)
 This skill is generic. The example data, the references, and the builder contain **no real customer data**.

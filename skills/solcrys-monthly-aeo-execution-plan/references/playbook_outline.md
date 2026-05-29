@@ -32,6 +32,10 @@ that shows the lag-shaped curve so a quiet early month isn't read as failure.
 ## 4. The Content Roadmap
 Phased (by month). Each phase: goal, bulleted deliverables, the footprint gap it closes, the engine
 timing it targets, and a KPI note. End with an at-a-glance table.
+**Ground every owned (1P) deliverable in the owned-page inventory** (Phase 3/4): write it as *refresh
+[existing URL]* when the brand already has a page on the topic, and *create [new page]* only where the
+inventory confirmed no page covers the target prompt. "Rebuild the product pages" / "publish answer pages"
+with no named URL and no named gap is not an acceptable deliverable.
 
 ## 5. Content Cadence
 Sustained weekly/biweekly outputs by channel (owned pages, Reddit, LinkedIn, YouTube, earned/PR, refresh)
@@ -46,12 +50,20 @@ pages-indexed/leading indicators, earned placements, owned AEO score). Note that
   weakest), plus competitor claims unsupported by independent sources. Each: claim → what sources say → action.
 - **B. Proof Library** — the brand's citable, verified results (specific numbers beat vague ranges) +
   defensible differentiators to lead with.
-- **C. Editorial Media Targets** — real outlets with contributor/PR pathways + a brand-specific angle each.
+
+Appendices C–F are the **3P targets, and each must be vetted against competitors** (Phase 4): every row
+records whether a tracked competitor is already cited / mentioned / active there. Lead with *proven* targets
+(competitor present, brand absent — a channel demonstrably feeding category citations) and rank them above
+*speculative* ones (no tracked brand cited there yet), which stay only if useful and are labeled as such.
+
+- **C. Editorial Media Targets** — real outlets with contributor/PR pathways + a brand-specific angle each;
+  note which tracked competitor is cited there (from citation data) so the target is proven, not a guess.
 - **D. Listicle / Roundup Inclusion** — the "best {category} software" roundups the engines already cite
-  (from citations data) that omit the brand; inclusion action for each.
-- **E. Reddit Playbook** — specific subreddits (size, relevance, priority), etiquette (disclose, help-first,
-  self-promo ratio), and starter post angles built from the Proof Library.
-- **F. LinkedIn Playbook** — named industry voices/communities + a posting cadence from named execs.
+  (from citations data) that omit the brand; show citations + which competitors are listed; inclusion action for each.
+- **E. Reddit Playbook** — specific subreddits (size, relevance, priority), whether a competitor is cited from /
+  active in each, etiquette (disclose, help-first, self-promo ratio), and starter post angles built from the Proof Library.
+- **F. LinkedIn Playbook** — named industry voices/communities (noting where competitors already engage or are
+  cited) + a posting cadence from named execs.
 
 Each appendix carries its own Sources box. Close the doc with a verification note: indexing windows are
 planning estimates; vendor figures are company claims unless independently sourced; confirm subreddit
