@@ -1,0 +1,187 @@
+{
+  "_comment": "GENERIC EXAMPLE — all values are fictional placeholders for a made-up brand. Replace EVERYTHING with the real brand's SolCrys data and fresh research. Do not ship these numbers. The `body` array is an ordered list of blocks; the builder renders them in order. Block types: {h1},{h2},{p,bold?,italic?},{note},{bullets:[]},{numbers:[]},{table:{cols,rows,widths?,highlightLastCol?}},{sources:[[label,url]],sourcesTitle?},{pageBreak},{space}.",
+  "meta": {
+    "title": "Winning the AI Answer Layer",
+    "subtitle": "A 3-Month Content & AEO Proposal to Close the Visibility Gap with [Leader Brand]",
+    "goalLine": "Goal: lift [Brand]'s AI share of voice from 27% to 40% over 12 weeks",
+    "preparedFor": "Prepared for: Office of the CEO, [Brand]",
+    "evidenceBase": "Evidence base: SolCrys AEO platform — [window], [N] tracked prompts, 4 engines (ChatGPT, Gemini, Google AIO, Perplexity)",
+    "date": "[Month Year]  •  v2 (3-month)",
+    "header": "[Brand] — Winning the AI Answer Layer | CEO Proposal",
+    "outputFile": "Brand_AEO_Playbook.docx"
+  },
+  "body": [
+    { "h1": "Executive Summary" },
+    { "p": "Buyers increasingly ask AI assistants to recommend [category] software. [Leader] is named in [Y]% of relevant answers; [Brand] in [X]%, ranking #[r] of [n]. Category discovery is moving to AI and the leader is compounding its lead." },
+    { "p": "This is a content-supply problem, not a perception one: when [Brand] is named, sentiment is strongly positive and it already ranks #[k] on 'primary' recommendations. AI engines can only cite what exists, and [Brand]'s content footprint is thin across owned (1P), editorial (3P) and UGC layers.", "bold": true },
+    { "p": "Why three months: publishing is not citation. Perplexity reflects new content in ~2–4 weeks and Google AI Overviews in ~2–8 weeks, but ChatGPT runs a 6–12 week lag. We front-load production into Month 1, then use Months 2–3 as deliberate pickup buffer so results are real and measured fairly." },
+    { "pageBreak": true },
+
+    { "h1": "1. Key Takeaways from the SolCrys AEO Data" },
+    { "h2": "1.1  Content footprint summary & gaps (1P, 3P, UGC)" },
+    { "p": "Across [total] citations the engines pulled when answering [Brand]'s [N] category prompts, here is where the brand stands by content layer." },
+    { "table": { "cols": ["Content layer", "Share of citations", "Brand presence", "Gap"],
+      "rows": [
+        ["1P — Owned", "[o]% ([n])", "Mentioned, few URLs", "Too few citable pages"],
+        ["3P — Editorial", "[e]% ([n])", "On a couple of authority sites", "No tier-1 halo"],
+        ["3P — Industry / Other", "[i]% ([n])", "Largely absent; competitors dominate", "Biggest volume gap"],
+        ["UGC — community", "[u]% ([n])", "Absent from the top community domain", "No community presence"]
+      ], "widths": [2750, 2000, 3100, 1510] } },
+    { "p": "Priority gaps: (1) UGC blind spot; (2) industry-layer absence; (3) owned thinness." },
+    { "sources": [["SolCrys visibility & citation insights — workspace '[slug]' ([window])", "https://example.com"]], "sourcesTitle": "Source — Section 1.1" },
+
+    { "h2": "1.2  Why [Leader]'s AI visibility is stronger" },
+    { "table": { "cols": ["Advantage", "What the data shows", "Implication"],
+      "rows": [
+        ["More owned citable pages", "[leader] cited [a]× across [b] URLs vs [brand] [c]× across [d]", "Build breadth of answer pages"],
+        ["Tier-1 editorial halo", "[tier-1 outlet] cited [e]×", "Earn 1–2 marquee features"],
+        ["Partner / parent amplification", "[partner domain] cited [f]×", "Lean on the brand's own moats"],
+        ["Category default + recency", "[g]% primary vs [h]%; fresh coverage", "Sustained cadence to stay top-of-retrieval"]
+      ], "widths": [2400, 4400, 2560] } },
+    { "sources": [["[Leader] tier-1 coverage", "https://example.com"], ["SolCrys SOV & citation domain data", "https://example.com"]], "sourcesTitle": "Sources — Section 1.2" },
+
+    { "h2": "1.3  Category citation insights (based on current prompts)" },
+    { "p": "Sourcing mix: [i]% industry/other, [u]% UGC, [e]% editorial, [o]% owned. UGC and editorial are highly concentrated — a few domains carry almost all of it." },
+    { "p": "Top editorial domains:", "bold": true },
+    { "table": { "cols": ["#", "Editorial domain", "Citations", "Mentions brand?"],
+      "rows": [["1", "[domain]", "[n]", "No"], ["2", "[domain]", "[n]", "Yes"], ["3", "[domain]", "[n]", "Yes"], ["4", "[domain]", "[n]", "Mixed"], ["5", "[domain]", "[n]", "No"]],
+      "widths": [600, 5160, 1600, 2000] } },
+    { "p": "Top UGC domains:", "bold": true },
+    { "table": { "cols": ["#", "UGC domain", "Citations", "Mentions brand?"],
+      "rows": [["1", "[community site]", "[n] (≈[x]% of UGC)", "No"], ["2", "[video site]", "[n]", "No"], ["3", "[pro network]", "[n]", "Yes"]],
+      "widths": [600, 4060, 2700, 2000] } },
+    { "note": "Insight: UGC is effectively one community site; editorial is thin and concentrated — both are short, addressable lists." },
+    { "sources": [["SolCrys citation insights by source type & domain", "https://example.com"]], "sourcesTitle": "Sources — Section 1.3" },
+    { "pageBreak": true },
+
+    { "h1": "2. The Indexing & Pickup Lag Model (why 3 months + buffer)" },
+    { "p": "Before an engine can cite a page it must crawl, index/rank, then select it into an answer. Crawling is fast; the lag is in ranking and selection, and it differs by engine. Treat these as planning estimates, not guarantees." },
+    { "table": { "cols": ["Engine", "Crawl", "Citation pickup after publish", "Notes"],
+      "rows": [
+        ["Perplexity", "hours–days", "~2–4 weeks", "Freshest; best leading indicator"],
+        ["Google AI Overviews", "days", "~2–8 weeks", "Leans on organic rank"],
+        ["Gemini", "days", "~2–8 weeks", "Tied to Google index"],
+        ["ChatGPT", "hours–days", "~6–12 weeks", "Retrieval cycle = the long pole"]
+      ], "widths": [2100, 1500, 3100, 2660] } },
+    { "bullets": [
+      "Earned media adds ~2–6 weeks pitch-to-publish before the engine clock starts — pitch early.",
+      "UGC needs to age and gather engagement before engines treat it as citable — start early." ] },
+    { "p": "Implication: front-load owned content into Month 1 so the ChatGPT clock starts immediately; treat Months 2–3 as the pickup buffer, not downtime. A 2-month plan tends to measure before ChatGPT reflects the work.", "bold": true },
+    { "sources": [
+      ["AEO/GEO pickup timing (ChatGPT 6–12wk, Perplexity 2–4wk)", "https://startupgtm.substack.com/p/get-visibility-in-chatgpt-perplexity"],
+      ["Platform citation preferences", "https://siteup.ai/blog/chatgpt-perplexity-google-ai-overview-citation-preference"],
+      ["How OpenAI crawls & indexes sites", "https://www.withdaydream.com/library/how-openai-crawls-and-indexes-your-website"]
+    ], "sourcesTitle": "Sources — Section 2" },
+    { "pageBreak": true },
+
+    { "h1": "3. The Target & a Realistic Trajectory" },
+    { "p": "Of [N] prompts, [Brand] is invisible (0 mentions) on [a], weak on [b], and leads on [c]. SOV won't move in a straight line — expect flat-to-modest in Month 1, acceleration in Month 2, target in Month 3." },
+    { "table": { "cols": ["Checkpoint", "Blended SOV", "What's driving it"],
+      "rows": [
+        ["Baseline (now)", "[X]%", "Current state"],
+        ["End Month 1", "~[+small]%", "Content live + indexed; Perplexity first pickups"],
+        ["End Month 2", "~[mid]%", "Perplexity + Google AIO reflect M1 content; earned media live"],
+        ["End Month 3", "[target]%", "ChatGPT catches up; UGC + earned compounding"]
+      ], "widths": [2600, 2100, 4660], "highlightLastCol": false } },
+    { "note": "[Weakest engine] is the biggest early-win lever and the clearest leading indicator the plan is working." },
+    { "pageBreak": true },
+
+    { "h1": "4. The 3-Month Content Roadmap" },
+    { "h2": "Month 1 — Produce & Publish (front-load)" },
+    { "p": "Goal: 100% of owned content live and crawlable by week 4; start long-lead earned-media pitches now.", "bold": true },
+    { "bullets": [
+      "Reconcile conflicting facts (Appendix A); confirm AI crawlers unblocked; submit sitemaps.",
+      "Rebuild core product pages as definitional, answer-shaped pages with FAQ/Product/HowTo schema.",
+      "Publish the invisible-prompt pages and a comparison hub vs [Leader].",
+      "Publish 2 verified case studies; start editorial pitches and disclosed Reddit/LinkedIn presence." ] },
+    { "note": "Closes owned thinness + invisible prompts. Starts the ChatGPT (6–12wk) and Perplexity (2–4wk) clocks. KPI: owned AEO score up; pages indexed." },
+    { "h2": "Month 2 — Pickup & Amplify (the buffer)" },
+    { "bullets": [
+      "Earned media publishes; pursue inclusion in the roundups engines already cite; case studies syndicated; trade PR.",
+      "YouTube explainers; sustain Reddit answers + a writeup; weekly LinkedIn from named execs; analyst briefings." ] },
+    { "note": "Closes editorial halo + industry-layer absence. Perplexity + Google AIO pickup of M1 content. KPI: owned-citation share up; weakest engine up." },
+    { "h2": "Month 3 — Compound & Measure" },
+    { "bullets": [
+      "ChatGPT begins reflecting M1 content; double down on still-lagging prompts; secure tier-1 feature.",
+      "Final amplification; refresh top pages for freshness; full SolCrys read vs target; set ongoing cadence." ] },
+    { "note": "ChatGPT catch-up + cross-engine freshness. KPI: SOV → target; invisible prompts 0." },
+    { "space": true },
+    { "table": { "cols": ["Month", "Phase / layer", "Headline deliverables", "Engine timing"],
+      "rows": [
+        ["1", "Produce & publish (1P + pitch 3P)", "Fact fix; core pages + schema; invisible-prompt pages; comparison hub; case studies; start pitches", "Starts ChatGPT & Perplexity clocks"],
+        ["2", "Pickup & amplify (3P + UGC)", "Earned media; roundup inclusions; PR; YouTube; Reddit; exec LinkedIn", "Perplexity + Google AIO pickup"],
+        ["3", "Compound & measure (all)", "Refresh lagging pages; tier-1 feature; final push; measure; set cadence", "ChatGPT catch-up + freshness"]
+      ], "widths": [700, 2300, 4360, 2000] } },
+    { "pageBreak": true },
+
+    { "h1": "5. Content Cadence (sustained output)" },
+    { "table": { "cols": ["Channel", "Cadence", "Why"],
+      "rows": [
+        ["Owned answer pages", "2/wk (M1) then 1/wk", "Breadth of citable pages; freshness"],
+        ["Community (named expert)", "3–5 helpful answers/wk + 1 writeup/mo", "Highest-cited layer; needs aging"],
+        ["Professional network (execs)", "2 posts/wk", "Citable; compounds with earned media"],
+        ["Video", "1 / 2–3 weeks", "Cited across multiple engines"],
+        ["Earned media / PR", "1 pitch or release / 2 weeks", "Editorial halo; long lead"],
+        ["Page-freshness refresh", "Top pages monthly", "Resets recency; aids re-pickup"]
+      ], "widths": [2700, 2900, 3760] } },
+
+    { "h1": "6. Targets & Measurement (SolCrys, every 2 weeks)" },
+    { "table": { "cols": ["Metric", "Baseline", "End M1", "End M2", "End M3"],
+      "rows": [
+        ["Blended SOV", "[X]%", "~[+]%", "~[mid]%", "[target]%"],
+        ["Invisible prompts (0 mentions)", "[a]", "[a-1]", "[a-2]", "0"],
+        ["Owned-citation share", "[o]%", "[+]%", "[++]%", "[+++]%"],
+        ["Weakest-engine mention rate", "[w]%", "[+]%", "[++]%", "[+++]%"],
+        ["Pages indexed / bots crawling", "baseline", "all live", "—", "—"],
+        ["Earned / trade placements", "0", "pitched", "1 live", "1–2 live"],
+        ["Owned AEO score", "[s]", "[+]", "[++]", "[+++]"]
+      ], "widths": [2700, 1500, 1620, 1620, 1620], "highlightLastCol": true } },
+    { "note": "SOV is a lagging metric — track leading indicators (pages indexed, bots crawling, first Perplexity pickups) in Month 1." },
+    { "pageBreak": true },
+
+    { "h1": "Appendix A — Fact & Claim Audit" },
+    { "p": "Reconcile conflicting brand claims (engines surface the weakest) and flag competitor claims unsupported by independent sources." },
+    { "table": { "cols": ["Claim", "What sources say", "Action"],
+      "rows": [["[stat]", "[page A] vs [page B] differ", "Lock one verified figure"], ["[competitor claim]", "Not in independent coverage", "Don't repeat as fact"]],
+      "widths": [2350, 4500, 2510] } },
+    { "sources": [["Brand site", "https://example.com"], ["Independent source", "https://example.com"]], "sourcesTitle": "Sources — Appendix A" },
+
+    { "h1": "Appendix B — Proof Library" },
+    { "p": "The brand's citable, verified results — specific numbers beat vague ranges." },
+    { "table": { "cols": ["Use case", "Verified result", "Best use"],
+      "rows": [["[segment]", "[specific metric]", "[page/angle]"], ["[segment]", "[specific metric]", "[page/angle]"]],
+      "widths": [2350, 4500, 2510] } },
+    { "sources": [["Brand case studies", "https://example.com"]], "sourcesTitle": "Sources — Appendix B" },
+
+    { "h1": "Appendix C — Editorial Media Targets" },
+    { "table": { "cols": ["Outlet", "Pathway", "Angle"],
+      "rows": [["[trade outlet]", "Guest byline / contributor", "[brand-specific angle]"], ["[analyst/community]", "Analyst briefing / podcast", "[data story]"]],
+      "widths": [2700, 3800, 2860] } },
+    { "sources": [["[Outlet] contributor guidelines", "https://example.com"]], "sourcesTitle": "Sources — Appendix C" },
+
+    { "h1": "Appendix D — Listicle / Roundup Inclusion" },
+    { "p": "The 'best [category]' roundups engines already cite that omit the brand." },
+    { "table": { "cols": ["Roundup", "Status in data", "Action"],
+      "rows": [["[roundup domain]", "Cited [n]×; brand absent", "Editor outreach / submit listing"]],
+      "widths": [2900, 3600, 2860] } },
+    { "sources": [["[Roundup]", "https://example.com"]], "sourcesTitle": "Sources — Appendix D" },
+
+    { "h1": "Appendix E — Community / Reddit Playbook" },
+    { "p": "The top community domain feeds ChatGPT + Google AIO; the brand is absent. Disclosed, helpful participation by a named expert — not promotion. Counts approximate; verify live." },
+    { "table": { "cols": ["Community", "~Members*", "Relevance", "Priority"],
+      "rows": [["[subreddit]", "~[n]", "[buyer/practitioner]", "HIGH"], ["[subreddit]", "~[n]", "[adjacent]", "MED"]],
+      "widths": [2550, 1300, 4000, 1510] } },
+    { "bullets": ["Disclose affiliation; help-first; ~1-in-10 self-promo ratio; never post confidential data.", "Starter posts built from the Proof Library (Appendix B)."] },
+    { "sources": [["Community list + member counts", "https://example.com"]], "sourcesTitle": "Sources — Appendix E" },
+
+    { "h1": "Appendix F — LinkedIn / Professional-Network Playbook" },
+    { "table": { "cols": ["Person / community", "Who", "Engagement"],
+      "rows": [["[named industry voice]", "[role]", "Offer data / guest content"], ["[association]", "[authority]", "Join & co-publish"]],
+      "widths": [2700, 3300, 3360] } },
+    { "bullets": ["Weekly: 1 results post (Appendix B stat) + 1 explainer, posted from named execs — personal profiles are more citable than the company page.", "Repurpose every earned-media piece as a post to create another citable URL."] },
+    { "sources": [["[Named voice] profile", "https://example.com"]], "sourcesTitle": "Sources — Appendix F" },
+
+    { "space": true },
+    { "p": "Verification note: indexing windows are planning estimates that vary by domain authority and competition. Vendor figures are company claims unless independently sourced. SolCrys figures are from the '[slug]' workspace, [window], [N] prompts, 4 engines. Confirm community counts and outlet terms live before committing budget.", "italic": true, "color": "666666" }
+  ]
+}
