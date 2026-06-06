@@ -199,7 +199,7 @@ This is a successful outcome, not a failed one. Better an honest outline than fa
 - **Don't characterize competitor content you didn't fetch.** Referring to "Wirecutter's exhaustive comparison" when you only have a URL/title is fabrication.
 - **Don't write to a target word count** when you don't have enough facts to fill it. Outline mode > padding mode.
 - **Don't silently widen to un-promoted recommendations.** The widening triggers in step 2 are explicit; if none of them hold, stop at the promoted queue. When you do widen, say so once.
-- **Don't auto-promote.** This skill does not call the dashboard's `/actions/promote` endpoint (no MCP write tools exist for that anyway). If the user wants an un-promoted recommendation tracked in the Action Hub, point them at the dashboard's deep-analysis view — never claim the skill promoted it.
+- **Don't auto-promote.** This skill does not call the dashboard's `/actions/promote` endpoint, and there is no MCP tool to *promote* a recommendation (the one MCP write tool, `solcrys_publish_task`, *publishes* an already-promoted task — it does not promote). If the user wants an un-promoted recommendation tracked in the Action Hub, point them at the dashboard's deep-analysis view — never claim the skill promoted it.
 
 ## Forbidden phrasings in drafted content
 
