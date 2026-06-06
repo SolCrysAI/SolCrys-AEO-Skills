@@ -8,7 +8,7 @@ SolCrys MCP lets AI clients query your SolCrys AEO data directly. You can ask qu
 - "What domains are AI engines citing for my category?"
 - "Draft a content brief for prompts where competitors are winning."
 
-The MCP server is read-only. It can retrieve your SolCrys data, but it cannot modify your workspace.
+The MCP server is read-mostly: nearly every tool is read-only (it retrieves your SolCrys data). There is exactly one narrow, opt-in write — `solcrys_publish_task`, which marks a deep-analysis task as published. That write needs a separate `write:actions` scope an admin must grant deliberately; read tokens never receive it.
 
 ---
 
@@ -19,7 +19,7 @@ The MCP server is read-only. It can retrieve your SolCrys data, but it cannot mo
 | Server URL | `https://mcp.solcrys.com/mcp` |
 | Transport | Streamable HTTP |
 | Auth methods | OAuth or Personal Access Token |
-| Access | Read-only |
+| Access | Read-mostly — read-only by default; one opt-in write scope (`write:actions`) |
 
 ---
 
@@ -468,7 +468,7 @@ For <workspace-slug>, summarize the highest-priority recommendations from deep a
 
 ## Security Notes
 
-- SolCrys MCP is read-only.
+- SolCrys MCP is read-mostly: read-only by default, with one opt-in write scope (`write:actions`) that only an admin can grant. Tokens without it cannot modify anything.
 - Workspace access is scoped to the authenticated account or PAT.
 - PATs should be stored in a password manager.
 - Revoke unused PATs from the MCP admin page.
