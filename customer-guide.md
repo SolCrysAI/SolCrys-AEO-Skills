@@ -8,7 +8,15 @@ SolCrys MCP lets AI clients query your SolCrys AEO data directly. You can ask qu
 - "What domains are AI engines citing for my category?"
 - "Draft a content brief for prompts where competitors are winning."
 
-The MCP server is read-mostly: nearly every tool is read-only (it retrieves your SolCrys data). There is exactly one narrow, opt-in write — `solcrys_publish_task`, which marks a deep-analysis task as published. That write needs a separate `write:actions` scope an admin must grant deliberately; read tokens never receive it.
+The MCP server is read-mostly: nearly every tool only retrieves your SolCrys data. A few tools can change things, and each needs its own write scope:
+
+| Tool | Write scope | What it changes |
+|---|---|---|
+| `solcrys_publish_task` | `write:actions` | Marks a task as published, with the URL it was published at. |
+| `solcrys_propose_cc_page` | `write:corporate-context` | Creates Corporate Context drafts for review; cannot publish them. |
+| `solcrys_write_cc_page` | `write:corporate-context-live` | Creates, edits or removes Corporate Context pages. A change takes effect in SolCrys's AI grounding at once, is recorded under the person who connected the app, and is flagged for review in the Corporate Context center, where it can be reverted. |
+
+Which write scopes you can grant depends on your role in SolCrys. A personal access token gets a write scope only if you tick it when you create the token. **On the OAuth consent screen (for example when you connect Claude), the write permissions you are allowed to grant start ticked, including live Corporate Context edits when they are offered. Untick any you don't want before you click Authorize.** Corporate Context writes work only where Corporate Context is enabled for your organization. A connection without a write scope cannot change anything.
 
 ---
 
@@ -19,7 +27,7 @@ The MCP server is read-mostly: nearly every tool is read-only (it retrieves your
 | Server URL | `https://mcp.solcrys.com/mcp` |
 | Transport | Streamable HTTP |
 | Auth methods | OAuth or Personal Access Token |
-| Access | Read-mostly — read-only by default; one opt-in write scope (`write:actions`) |
+| Access | Read-mostly — writes need a write scope (`write:actions`, `write:corporate-context`, `write:corporate-context-live`); on OAuth consent, the write scopes offered to you start ticked |
 
 ---
 
@@ -53,7 +61,7 @@ Use OAuth for interactive clients that support browser-based MCP authorization.
 
 3. Choose OAuth, browser sign-in, or automatic authentication if the client asks.
 4. Your browser opens SolCrys.
-5. Sign in, choose the tenant or workspace access, and approve.
+5. Sign in, choose the tenant or workspace access, and approve. Write permissions start ticked; untick any you don't want.
 6. Return to your AI client.
 7. Verify by asking:
 
@@ -168,7 +176,7 @@ Claude Desktop supports remote MCP servers **only** through the in-app **Custom 
    - **Name:** SolCrys AEO (or any label)
    - **Remote MCP server URL:** `https://mcp.solcrys.com/mcp`
 
-4. Click **Add**. Claude Desktop opens a browser tab for OAuth consent on SolCrys — sign in, pick a tenant, click **Authorize**.
+4. Click **Add**. Claude Desktop opens a browser tab for OAuth consent on SolCrys — sign in, pick a tenant, untick any write permissions you don't want, click **Authorize**.
 5. The connector card flips to **Connected**. Ask in a chat:
 
    ```text
@@ -419,9 +427,9 @@ Use the `slug` from that response, not the display name.
 
 ### `insufficient_scope`
 
-The token does not have the required read scope.
+The connection does not have the scope the tool needs. It may be a read scope or a write scope.
 
-Create a new PAT with broader read access.
+For a PAT, create a new token that includes that scope. For an OAuth connection, reconnect and keep that permission ticked on the consent screen.
 
 ---
 
@@ -468,7 +476,7 @@ For <workspace-slug>, summarize the highest-priority recommendations from deep a
 
 ## Security Notes
 
-- SolCrys MCP is read-mostly: read-only by default, with one opt-in write scope (`write:actions`) that only an admin can grant. Tokens without it cannot modify anything.
+- SolCrys MCP is read-mostly. Each write needs its own write scope, granted per connection; a connection without one cannot modify anything. Personal access tokens start with no write scope; the OAuth consent screen starts the writes you may grant ticked, so untick any you don't want. Corporate Context changes take effect at once, are recorded under the person who connected the app, and can be reverted in the Corporate Context center.
 - Workspace access is scoped to the authenticated account or PAT.
 - PATs should be stored in a password manager.
 - Revoke unused PATs from the MCP admin page.

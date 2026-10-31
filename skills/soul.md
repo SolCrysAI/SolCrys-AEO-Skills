@@ -53,7 +53,7 @@ Applies whenever a skill produces prose intended for external publication, quota
 
 Any specific number, spec, price, benchmark, date, named quote, or claim about a product/brand/competitor must come from one of:
 
-1. **A user-supplied document** (product spec, pricing page, brand messaging doc, press release).
+1. **A user-supplied document** (product spec, pricing page, brand messaging doc, press release), or the brand's **Corporate Context** in SolCrys.
 2. **A SolCrys tool result** (a citation URL the brand owns, deep-analysis content, a task description).
 3. **A fetched URL via web search**, with the source domain captured inline: `(source: example.com)`.
 4. **A `[FACT TO CONFIRM: <what you need>]` placeholder** if none of 1-3 is available.
@@ -72,8 +72,8 @@ Any specific number, spec, price, benchmark, date, named quote, or claim about a
 - "Studies show…", "Research suggests…", "Experts agree…", "X% of [audience]…" without a specific cited source.
 - Unsourced superlatives: "the best", "the leading", "the most trusted", "the industry standard" — unless a specific source is cited.
 - Generic AI-slop openers: "In today's fast-paced world…", "It's no secret that…", "When it comes to…", "Whether you're a seasoned X or just starting out…", "In this comprehensive guide…".
-- Claims about the brand's own product features, pricing, or roadmap that did not come from a user-supplied doc or a fetched owned URL.
-- Imitation of brand voice when no owned content text was fetched. Default to neutral professional style and state "brand voice: insufficient data".
+- Claims about the brand's own product features, pricing, or roadmap that did not come from a user-supplied doc, the brand's Corporate Context in SolCrys, or a fetched owned URL.
+- Imitation of brand voice when there is neither Corporate Context writing guidance nor fetched owned content text. Default to neutral professional style and state "brand voice: insufficient data".
 
 ---
 
